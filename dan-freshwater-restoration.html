@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Freshwater Restoration Ecology — A Thesis-Quality Slide Tour</title>
+<style>
+  :root {
+    --ink: #f6fbff;
+    --muted: #c8e0d2;
+    --accent: #7dffb1;
+    --warn: #ffd166;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #000;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    overflow: hidden;
+  }
+  .deck { position: fixed; inset: 0; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 700ms ease;
+    pointer-events: none;
+    background-size: cover; background-position: center;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; z-index: 2; }
+  .slide.active .bg { animation: kenburns 22s ease-out forwards; }
+  .bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    transform: scale(1.05);
+    will-change: transform;
+  }
+  @keyframes kenburns {
+    from { transform: scale(1.05) translate(0, 0); }
+    to   { transform: scale(1.18) translate(-1.5%, -1.5%); }
+  }
+  .scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.85) 100%),
+      linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.0) 55%);
+  }
+  .content {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 6vh 7vw 110px;        /* clears .ctrls bar at the bottom */
+    max-width: min(1100px, 92vw);  /* keeps body off the right-edge attribution */
+  }
+  .eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .title {
+    font-size: clamp(32px, 5.4vw, 64px);
+    line-height: 1.05;
+    margin: 0 0 14px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.55);
+  }
+  .subtitle {
+    font-size: clamp(16px, 1.8vw, 22px);
+    line-height: 1.45;
+    max-width: 900px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.55);
+    margin: 0 0 18px;
+  }
+  .body {
+    font-size: clamp(13px, 1.15vw, 16px);
+    line-height: 1.6;
+    max-width: 880px;
+    color: var(--muted);
+  }
+  .body p { margin: 0 0 9px; }
+  .body strong { color: #fff; }
+  .body em { color: var(--accent); font-style: normal; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 16px;
+    margin: 16px 0 4px;
+    font-size: 12px; color: var(--muted);
+  }
+  .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(125,255,177,0.12);
+    border: 1px solid rgba(125,255,177,0.35);
+    border-radius: 999px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .figures { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+  .stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 10px;
+    padding: 8px 12px;
+    min-width: 120px;
+  }
+  .stat .num { font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .attrib {
+    position: absolute;
+    top: 50px; right: 18px;
+    max-width: 38vw;
+    text-align: right;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+    z-index: 4;
+    letter-spacing: 0.5px;
+  }
+  .hud {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    pointer-events: none;
+  }
+  .deck-title {
+    font-size: 12px; color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .deck-title b { color: var(--accent); }
+  .counter {
+    pointer-events: auto;
+    font-size: 12px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--ink);
+    padding: 5px 10px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3px; background: rgba(255,255,255,0.08); z-index: 11;
+  }
+  .progress > .bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--accent), #ffffff);
+    transition: width 500ms ease;
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .ctrls {
+    position: fixed; bottom: 18px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex; gap: 10px;
+    pointer-events: auto;
+  }
+  .btn {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 200ms, transform 200ms;
+  }
+  .btn:hover { background: rgba(125,255,177,0.18); transform: translateY(-1px); }
+  .btn.icon { padding: 10px 12px; }
+  .zone {
+    position: fixed; top: 0; bottom: 0;
+    width: 25%; z-index: 5; cursor: pointer;
+  }
+  .zone.left  { left: 0; }
+  .zone.right { right: 0; }
+  /* keyboard hint hidden — was overlapping body text on long slides */
+  .hint { display: none; }
+  .home-link {
+    position: fixed;
+    top: 14px; left: 20px;
+    z-index: 12;
+    color: var(--accent);
+    font-size: 12px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .home-link:hover { opacity: 1; }
+  @media (max-width: 700px) {
+    .content { padding: 5vh 6vw 12vh; }
+    .hint, .deck-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<a class="home-link" href="dan-aquatic-ecology.html">← back to ecology overview</a>
+
+<div class="hud">
+  <div class="deck-title"><b>Freshwater Restoration Ecology</b> · A thesis-grade slide tour</div>
+  <div class="counter"><span id="curr">1</span> / <span id="total">1</span></div>
+</div>
+
+<div class="hint">
+  <kbd>→</kbd> next &nbsp; <kbd>←</kbd> prev<br/>
+  <kbd>F</kbd> fullscreen &nbsp; <kbd>P</kbd> auto-play<br/>
+  <kbd>Home</kbd> first &nbsp; <kbd>End</kbd> last
+</div>
+
+<div class="zone left"  id="zoneLeft"></div>
+<div class="zone right" id="zoneRight"></div>
+
+<div class="deck" id="deck"></div>
+
+<div class="ctrls">
+  <button class="btn icon" id="prev" title="Previous (←)">◀</button>
+  <button class="btn" id="play" title="Toggle auto-play (P)">▶ Auto-play</button>
+  <button class="btn icon" id="fs" title="Fullscreen (F)">⛶</button>
+  <button class="btn icon" id="next" title="Next (→)">▶</button>
+</div>
+
+<script>
+const SLIDES = [
+  {
+    eyebrow: "INTRODUCTION",
+    title: "Freshwater Restoration Ecology",
+    subtitle: "Recovering rivers, lakes, wetlands, springs & floodplains — the most threatened ecosystems on Earth.",
+    body: `
+      <p>Freshwater covers <strong>&lt; 1%</strong> of Earth's surface but supports <strong>~10% of all known
+      species</strong>, including roughly a third of all vertebrates. Despite this, freshwater biodiversity has
+      declined faster than any other realm — the <em>Living Planet Index</em> for monitored freshwater populations
+      has fallen <strong>83% since 1970</strong>, more than double the rate for marine or terrestrial systems.</p>
+      <p>This deck is a graduate-level tour of how restoration practitioners are reversing that decline — from
+      headwater springs to floodplain reconnection to the dam-removal revolution now sweeping North America.
+      Press <kbd>→</kbd> to advance.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Paran%C3%A1_River_Floodplain.jpg",
+    attrib: "Paraná River floodplain · Wikimedia Commons",
+    pills: ["Graduate level", "Freshwater focus", "Practitioner-oriented"],
+    stats: [
+      { num: "<1%",  lbl: "Earth's surface that's freshwater" },
+      { num: "10%",  lbl: "of all species depend on it" },
+      { num: "-83%", lbl: "freshwater LPI since 1970" }
+    ]
+  },
+  {
+    eyebrow: "FRAMEWORK",
+    title: "Process before pattern",
+    subtitle: "Why modern freshwater restoration treats <em>processes</em> — flow, sediment, wood, biota — not endpoints.",
+    body: `
+      <p>The 20th-century approach to river work was <strong>form-based</strong>: engineer the channel to a
+      target geometry (Rosgen, 1996) and the ecology will follow. Empirically, it didn't. Channels rebuilt to a
+      template eroded, fish populations failed to rebound, and projects required perpetual maintenance.</p>
+      <p><strong>Process-based restoration</strong> (Beechie et al. 2010) reframes the goal: restore the
+      disturbance regimes — <em>flooding, sediment transport, large wood recruitment, beaver activity, riparian
+      shading</em> — and let the river build and maintain its own habitat. The reference is not a target
+      cross-section but a target <em>set of processes operating across a watershed</em>.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Example_of_a_riparian_area.png",
+    attrib: "Riparian zone · Wikimedia Commons",
+    pills: ["Process-based", "Beechie et al. 2010", "Watershed scale"]
+  },
+  {
+    eyebrow: "RIVER · MORPHOLOGY",
+    title: "Stream channel restoration",
+    subtitle: "Re-meandering, re-wooding, and Stage 0 valley resets.",
+    body: `
+      <p>A century of channelization, riprap, ditching, and floodplain disconnection has structurally simplified
+      most temperate rivers. Restoration today emphasizes:</p>
+      <p><strong>Engineered log jams (ELJs)</strong> reintroduce large wood, force pool scour, sort sediment,
+      and create cover habitat. <strong>Levee setbacks</strong> reconnect the river to its floodplain. The
+      <strong>Stage 0</strong> approach — pioneered in Oregon's South Fork McKenzie — deliberately fills
+      incised channels and lets a new <em>anastomosing</em> network self-organize across the valley floor,
+      restoring lateral connectivity in one move.</p>
+      <p>Monitoring uses <strong>BACI</strong> (Before–After–Control–Impact) designs and tracks geomorphology,
+      EPT macroinvertebrates, and salmonid life-stage capacity (parr-smolt-adult).</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Robinson_Creek_before.jpg",
+    attrib: "Robinson Creek · Wikimedia Commons",
+    pills: ["ELJs", "Stage 0", "BACI monitoring"],
+    stats: [
+      { num: "1M+",     lbl: "stream miles altered, US" },
+      { num: "$1B+/yr", lbl: "US stream restoration spend" },
+      { num: "EPT",     lbl: "biological indicator" }
+    ]
+  },
+  {
+    eyebrow: "RIPARIAN",
+    title: "Riparian zone restoration",
+    subtitle: "The thin green ribbon that controls river temperature, nutrients, and habitat structure.",
+    body: `
+      <p>The <strong>riparian zone</strong> — the vegetated interface between a stream and its uplands — is
+      arguably the most leverage-per-acre real estate in restoration. Restored riparian forest provides
+      <em>shade</em> (cools water by 3–8 °C, critical for trout and salmon), <em>filters</em> agricultural
+      nutrients (nitrate uptake of 60–95% in well-designed buffers), <em>delivers terrestrial prey</em> to
+      fish (allochthonous subsidies make up &gt;50% of trout diet in forested headwaters), and <em>recruits
+      large wood</em> as it ages.</p>
+      <p>Best practice: a <strong>three-zone buffer</strong> — undisturbed forest at the water (≥35 ft),
+      managed forest behind it (≥20 ft), and grassed filter strip at the upland edge (≥20 ft). Native
+      species selection matched to floodplain hydrology beats single-species plantings every time.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Riparian_buffer_on_Bear_Creek_in_Story_County%2C_Iowa.JPG",
+    attrib: "Riparian buffer, Bear Creek IA · Wikimedia Commons",
+    pills: ["3-zone buffer", "Allochthonous", "Shade & nutrients"],
+    stats: [
+      { num: "3–8°C",  lbl: "temperature reduction from shade" },
+      { num: "60–95%", lbl: "nitrate removal in buffers" },
+      { num: ">50%",   lbl: "trout diet from terrestrial prey" }
+    ]
+  },
+  {
+    eyebrow: "FLOODPLAIN",
+    title: "Floodplain reconnection",
+    subtitle: "The single most effective intervention for big-river ecosystems.",
+    body: `
+      <p>Levees, drainage tile, and river straightening have severed most large rivers from their floodplains.
+      The result: lost off-channel rearing habitat for fish, lost nutrient processing, and — perversely —
+      <em>greater</em> downstream flood risk because peak flows have nowhere to dissipate.</p>
+      <p>Reconnection techniques include <strong>levee setbacks</strong>, <strong>two-stage ditches</strong>
+      (which provide bench storage during high flow), engineered <strong>side-channel reactivation</strong>,
+      and <strong>managed seasonal inundation</strong> (e.g., Yolo Bypass in California, where flooded rice
+      fields rear out-migrating juvenile Chinook at growth rates 5× higher than the mainstem river).</p>
+      <p>The Paraná, Amazon, and Mississippi all show the same pattern: floodplain area is the strongest
+      single predictor of fishery productivity.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Paran%C3%A1_River_Floodplain.jpg",
+    attrib: "Paraná River floodplain · Wikimedia Commons",
+    pills: ["Yolo Bypass", "Levee setback", "Flood-pulse concept"],
+    stats: [
+      { num: "5×",  lbl: "Chinook growth on floodplain" },
+      { num: ">80%", lbl: "global big-river floodplains lost/altered" },
+      { num: "Junk 1989", lbl: "flood-pulse concept" }
+    ]
+  },
+  {
+    eyebrow: "ECOSYSTEM ENGINEER",
+    title: "Beavers — nature's restoration crew",
+    subtitle: "How <em>Castor canadensis</em> rebuilds entire watersheds — for free.",
+    body: `
+      <p>A single beaver colony can restore <strong>kilometers of incised stream</strong>, raise the water
+      table by meters, store thousands of m³ of sediment, and convert a degraded gully into a wet meadow
+      complex within a decade. North American beaver populations were reduced from an estimated
+      <strong>60–400 million</strong> pre-colonization to fewer than 100,000 by 1900 — and most of the
+      "natural" stream geomorphology of the continent reflects that absence.</p>
+      <p>Restoration practitioners now treat beaver re-establishment as a <strong>keystone process</strong>,
+      not just a charismatic species. Where beaver populations are recovering, results are dramatic:
+      higher water tables (drought resilience), lower stream temperatures, increased salmonid rearing
+      capacity, and order-of-magnitude increases in waterbird and amphibian abundance.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/44/AlgonquinBeaverDam.JPG",
+    attrib: "Beaver dam, Algonquin Park · Wikimedia Commons",
+    pills: ["Castor canadensis", "Keystone process", "Drought resilience"],
+    stats: [
+      { num: "60–400M", lbl: "pre-colonial population estimate" },
+      { num: "<100K",   lbl: "low point, ~1900" },
+      { num: "+30%",    lbl: "stream length per beaver pond complex" }
+    ]
+  },
+  {
+    eyebrow: "LOW-TECH RESTORATION",
+    title: "Beaver Dam Analogs (BDAs)",
+    subtitle: "Low-cost wood-and-post structures that mimic beaver work — and often invite the real thing.",
+    body: `
+      <p>BDAs are <strong>permeable wood structures</strong> — typically vertical posts hand-driven across the
+      channel, woven with cut willow — installed in degraded incised streams. They slow water, force overbank
+      flow, trap sediment, and re-aggrade the channel, often inducing <em>actual beaver colonization</em> within
+      1–3 years. They cost roughly $500–2,500 per structure versus $50,000+ per traditional engineered grade
+      control.</p>
+      <p>This is part of the broader <strong>Low-Tech Process-Based Restoration</strong> framework
+      (Wheaton et al. 2019), which deliberately favors many cheap, distributed, "let it heal" interventions over
+      a few expensive engineered ones. The philosophy: <em>add the missing process and step out of the way</em>.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/6b/American_Beaver.jpg",
+    attrib: "American Beaver · Wikimedia Commons",
+    pills: ["LT-PBR", "Wheaton 2019", "$500–2,500 each"],
+    stats: [
+      { num: "$500–2.5K", lbl: "per BDA structure" },
+      { num: "1–3 yr",    lbl: "to natural beaver use" },
+      { num: "100×",      lbl: "cost ratio vs. hard structures" }
+    ]
+  },
+  {
+    eyebrow: "WETLAND",
+    title: "Wetland restoration",
+    subtitle: "Recovering the kidneys of the watershed.",
+    body: `
+      <p>The continental United States has lost roughly <strong>50% of its historical wetlands</strong>
+      (Dahl 1990); some states (Iowa, Illinois, California, Ohio) exceed 85% loss. Wetlands provide
+      disproportionate ecosystem services — <strong>flood storage</strong>, <strong>denitrification</strong>,
+      <strong>habitat for &gt; 1/3 of US threatened &amp; endangered species</strong>, and <em>carbon
+      sequestration</em> rivaled only by mangroves and seagrass.</p>
+      <p>Restoration approaches: (1) <strong>hydrologic reconnection</strong> — break drainage tile, plug
+      ditches, restore microtopography; (2) <strong>passive revegetation</strong> from the seed bank;
+      (3) <strong>topsoil salvage and respread</strong> on engineered sites; (4) <strong>constructed
+      wetlands</strong> (next slide) for water quality treatment. Wet meadows, prairie potholes, and
+      headwater seeps are some of the highest-leverage targets.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/d1/Flintenbreite_constructed_wetland.jpg",
+    attrib: "Constructed wetland, Flintenbreite · Wikimedia Commons",
+    pills: ["Hydrology first", "Seed bank", "Microtopography"],
+    stats: [
+      { num: "50%",  lbl: "of US wetlands lost (lower 48)" },
+      { num: ">33%", lbl: "T&E species wetland-dependent" },
+      { num: "$15K/ha/yr", lbl: "ecosystem services value (mean)" }
+    ]
+  },
+  {
+    eyebrow: "ENGINEERED · POLISHING",
+    title: "Constructed treatment wetlands",
+    subtitle: "Designing wetlands as living water-treatment infrastructure.",
+    body: `
+      <p>Constructed wetlands engineer microbial nitrogen and phosphorus removal, BOD reduction, and pathogen
+      attenuation through controlled hydraulic residence time and substrate selection. Two main types:
+      <strong>surface-flow</strong> (shallow open-water marshes — high habitat value, lower per-area
+      treatment intensity) and <strong>subsurface-flow</strong> (gravel-bed horizontal or vertical — higher
+      treatment efficiency, less habitat).</p>
+      <p>Common applications: tertiary treatment for small municipalities, agricultural tile-drain
+      polishing, mine-water passive treatment (with limestone substrate), urban stormwater. Performance
+      benchmarks: <strong>≥80% TN removal</strong>, <strong>≥90% TP</strong>, <strong>≥95% TSS</strong> in
+      well-designed systems with adequate residence time (typically &gt; 5 days).</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/d1/Flintenbreite_constructed_wetland.jpg",
+    attrib: "Flintenbreite constructed wetland · Wikimedia Commons",
+    pills: ["Surface vs subsurface", "HRT > 5 days", "Tertiary polishing"]
+  },
+  {
+    eyebrow: "LAKE · DEGRADATION",
+    title: "Eutrophication — the lake disease",
+    subtitle: "Excess phosphorus and nitrogen fuel the algal blooms that suffocate freshwater ecosystems.",
+    body: `
+      <p>Cultural eutrophication — driven by agricultural runoff, leaking septic systems, and urban
+      stormwater — is the leading cause of impairment in US lakes. Excess <strong>phosphorus</strong> (the
+      typical limiting nutrient in temperate freshwaters) triggers cyanobacterial blooms that produce
+      hepatotoxins (microcystins), shade out submerged aquatic vegetation, and crash dissolved oxygen during
+      die-off, killing fish and invertebrates.</p>
+      <p>Lake Erie's Western Basin (2014 Toledo water crisis), Florida's Lake Okeechobee, and thousands of
+      lakes worldwide show the same pattern. Restoration requires <strong>external load reduction</strong>
+      (the watershed) <em>and</em> <strong>internal load management</strong> (the lake itself), because
+      sediments release legacy P for decades after inputs are cut.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/7/74/River_algae_Sichuan.jpg",
+    attrib: "Algal bloom, Sichuan · Wikimedia Commons",
+    pills: ["P-limitation", "Cyanotoxins", "Internal loading"],
+    stats: [
+      { num: "30 µg/L", lbl: "P threshold for bloom risk" },
+      { num: "20+ yr",  lbl: "internal P legacy timescale" },
+      { num: "2014",    lbl: "Toledo / Lake Erie shutdown" }
+    ]
+  },
+  {
+    eyebrow: "LAKE · RECOVERY",
+    title: "Lake restoration techniques",
+    subtitle: "From in-lake interventions to whole-watershed nutrient management.",
+    body: `
+      <p>The full toolkit is wide — and choice depends on whether the lake is <em>internal</em>- or
+      <em>external</em>-load dominant.</p>
+      <p><strong>External:</strong> agricultural BMPs (cover crops, riparian buffers, no-till, controlled
+      drainage), septic upgrades, urban green infrastructure. <strong>Internal:</strong> alum or modified-clay
+      P inactivation, hypolimnetic aeration/oxygenation, hypolimnetic withdrawal, sediment dredging (last
+      resort), <em>biomanipulation</em> (removing planktivorous fish to release zooplankton grazing
+      pressure on phytoplankton). Famous successes: Lake Washington (Seattle, 1968 — sewage diversion),
+      Lake Trummen (Sweden, 1970s — dredging), Lake Mendota (Wisconsin, ongoing biomanipulation experiment).</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/04/Lake_Idro_Italy_2005-08-16.jpg",
+    attrib: "Lake Idro, Italy · Wikimedia Commons",
+    pills: ["Alum treatment", "Biomanipulation", "Lake Washington model"],
+    stats: [
+      { num: "0.5–2 g/m²", lbl: "typical alum dose (Al)" },
+      { num: "3–6 yr",     lbl: "Lake Washington recovery" },
+      { num: "BACI",       lbl: "evaluation design" }
+    ]
+  },
+  {
+    eyebrow: "URBAN · GREEN INFRA",
+    title: "Stormwater & green infrastructure",
+    subtitle: "Treating raindrops where they fall, not at the end of the pipe.",
+    body: `
+      <p>In urbanized watersheds, the hydrograph is the problem: imperviousness shifts rainfall–runoff
+      from slow infiltration to flashy peak flows that erode channels, scour habitat, and flush untreated
+      pollutants. Above ~10% impervious cover, freshwater biological integrity declines steeply (Schueler's
+      "impervious cover model").</p>
+      <p>Green-infrastructure restoration — <strong>bioswales</strong>, <strong>rain gardens</strong>,
+      <strong>permeable pavement</strong>, <strong>stormwater wetlands</strong>, <strong>green
+      roofs</strong>, <strong>daylighting buried streams</strong> — is the urban analogue of riparian buffer
+      and wetland restoration: distributed, infiltration-based, and additive across a watershed. It rarely
+      gets streams "back to natural" but reliably cuts peak flows, total volumes, and pollutant loads
+      enough to permit aquatic-life recovery.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/dc/Meridian_Hill_Bioswale.jpg",
+    attrib: "Meridian Hill bioswale · Wikimedia Commons",
+    pills: ["Schueler ICM", "Bioswales", "Daylighting"],
+    stats: [
+      { num: "10%",  lbl: "impervious threshold for IBI loss" },
+      { num: "30–60%", lbl: "peak-flow reduction (well-designed GI)" },
+      { num: "$0.50–$5/gal", lbl: "GI cost vs gray pipe" }
+    ]
+  },
+  {
+    eyebrow: "CONNECTIVITY",
+    title: "Dam removal — the freshwater revolution",
+    subtitle: "Over 2,000 US dams removed since 1912 — the rate is now ~80–100 per year and rising.",
+    body: `
+      <p>Aging, low-economic-value, and ecologically harmful dams are coming down at an accelerating rate.
+      The 2023–24 removal of four mainstem dams on the <strong>Klamath River</strong> reopened ~400 river
+      miles to anadromous fish — the largest dam removal in world history. The 2011–14 Elwha River removals,
+      the 2012–13 Penobscot Project, and the 1999 Edwards Dam removal are all reference cases.</p>
+      <p>Ecological responses are typically fast: native fish recolonize within 1–3 seasons, sediment
+      pulses reshape downstream habitat over 1–10 years, and riparian succession proceeds on newly
+      exposed reservoir footprints. Key planning items: legacy contaminant management, downstream sediment
+      slugs, replacement of any genuine flood/water-supply services, and Tribal/upstream stakeholder
+      engagement.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Dam_removal.jpg",
+    attrib: "Dam removal · Wikimedia Commons",
+    pills: ["Klamath 2024", "Elwha 2014", "Sediment management"],
+    stats: [
+      { num: "2,000+", lbl: "US dams removed since 1912" },
+      { num: "400 mi", lbl: "Klamath habitat reopened" },
+      { num: "1–3 yr", lbl: "typical fish recolonization" }
+    ]
+  },
+  {
+    eyebrow: "CONNECTIVITY",
+    title: "Fish passage where dams remain",
+    subtitle: "Engineered passage restores migratory life histories — when it's designed for the right species.",
+    body: `
+      <p>Where dams cannot be removed, <strong>fish ladders</strong>, <strong>nature-like fishways</strong>,
+      <strong>vertical-slot passes</strong>, <strong>Denil ladders</strong>, and <strong>trap-and-haul</strong>
+      programs reconnect spawning and rearing habitat for salmon, shad, alewife, sturgeon, lamprey, and eel.
+      Each species has different swimming and leaping capacities, jump heights, attraction-flow needs, and
+      resting-pool requirements — a Pacific salmon ladder will fail an American eel and vice versa.</p>
+      <p>Modern practice prioritizes <strong>nature-like bypass channels</strong> over concrete pool-and-weir
+      designs because they support a wider species assemblage. Passage <em>efficiency</em> (% that find and
+      ascend) and <em>delay</em> (hours/days lost) are the key monitoring metrics, typically quantified using
+      PIT-tag arrays or radio telemetry.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/94/Bonneville_Ladder.jpg",
+    attrib: "Bonneville Dam fish ladder · Wikimedia Commons",
+    pills: ["Nature-like fishway", "PIT telemetry", "Multispecies design"],
+    stats: [
+      { num: ">85%",   lbl: "target adult salmon passage efficiency" },
+      { num: "2 BL/s", lbl: "typical sustained swim speed" },
+      { num: "Δh ≤0.3m", lbl: "step head between pools" }
+    ]
+  },
+  {
+    eyebrow: "FOCAL SPECIES",
+    title: "Salmon recovery — the integrative test case",
+    subtitle: "Pacific salmon need every freshwater restoration tool, working together, at watershed scale.",
+    body: `
+      <p>Anadromous salmon (Chinook, Coho, Sockeye, Pink, Chum, Steelhead) integrate <em>all</em> the freshwater
+      restoration disciplines: spawning gravels (geomorphology), juvenile rearing (riparian, floodplain,
+      wood), thermal refuge (riparian shade, groundwater), and migratory connectivity (dam removal, passage).
+      They also tie freshwater to marine — adult carcasses deliver <strong>marine-derived nutrients</strong>
+      (nitrogen and phosphorus) that fertilize entire forested watersheds.</p>
+      <p>Of 28 ESUs (Evolutionarily Significant Units) in the US, <strong>26 are listed under the ESA</strong>.
+      Recovery requires watershed-scale coordination — Pacific Coast Salmon Recovery Fund, Columbia Basin
+      Salmon, Yurok and Klamath tribal-led restoration. Salmon are simultaneously the canary, the goal, and
+      the funding lever for almost all West-Coast freshwater restoration.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/5/59/Grizzly_Bear_Fishing_Brooks_Falls_%28flipped%29.jpg",
+    attrib: "Grizzly catching salmon, Brooks Falls · Wikimedia Commons",
+    pills: ["MDN", "ESU", "Tribal co-management"],
+    stats: [
+      { num: "26 / 28", lbl: "ESA-listed Pacific salmon ESUs" },
+      { num: "MDN",     lbl: "marine-derived nutrient subsidy" },
+      { num: "5,000 mi", lbl: "Snake-Columbia migration capacity" }
+    ]
+  },
+  {
+    eyebrow: "BIOTA · BIVALVES",
+    title: "Freshwater mussels — the silent extinction",
+    subtitle: "North America has the world's richest freshwater mussel fauna — and the most endangered.",
+    body: `
+      <p>Of ~300 species of native North American freshwater mussels (Unionidae and Margaritiferidae),
+      roughly <strong>70% are imperiled or extinct</strong> — the highest extinction rate of any major
+      animal group on the continent. Causes: dam-induced flow alteration, sedimentation, pollution, host-fish
+      decline (mussel larvae are <em>obligate parasites</em> on specific fish species), and invasive zebra and
+      quagga mussels.</p>
+      <p>Restoration uses <strong>captive propagation</strong> (in vitro transformation of glochidia on host
+      fish in hatcheries), <strong>silo augmentation</strong> reintroduction, and watershed-scale water quality
+      improvement. The Tennessee River Cumberlandian fauna — the Sistine Chapel of freshwater biodiversity —
+      is the focus of the largest mussel recovery program on Earth, run jointly by USFWS, TVA, and partners.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/ed/Margaritifera_margaritifera-buiten.jpg",
+    attrib: "Margaritifera margaritifera · Wikimedia Commons",
+    pills: ["Glochidia", "Captive propagation", "Cumberlandian fauna"],
+    stats: [
+      { num: "~300",  lbl: "native NA mussel species" },
+      { num: "~70%",  lbl: "imperiled or extinct" },
+      { num: "100+yr",lbl: "lifespan, some species" }
+    ]
+  },
+  {
+    eyebrow: "COLDWATER",
+    title: "Brook trout & coldwater conservation",
+    subtitle: "When water gets &gt; 21°C, native brook trout disappear — and they're disappearing fast.",
+    body: `
+      <p>Eastern Brook Trout (<em>Salvelinus fontinalis</em>) are the East's only native stream salmonid and
+      a keystone indicator of coldwater integrity. They require dissolved oxygen &gt; 7 mg/L and summer
+      maximum temperatures generally &lt; 21°C. Climate warming, riparian deforestation, and historical
+      logging-driven sedimentation have shrunk Brook Trout occupancy by an estimated <strong>50–80% across
+      the Appalachian range</strong>.</p>
+      <p>Restoration: <strong>riparian forest re-establishment</strong> (the cheapest, most durable thermal
+      management tool), <strong>groundwater seep protection</strong> (cold refugia), <strong>perched-culvert
+      replacement</strong> with stream-simulation crossings, and selective <em>reconnection</em> of upstream
+      headwater patches into larger metapopulations. Eastern Brook Trout Joint Venture coordinates the
+      multi-state effort.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Brook_trout_in_water.jpg",
+    attrib: "Brook trout · Wikimedia Commons",
+    pills: ["Salvelinus fontinalis", "<21°C", "EBTJV"],
+    stats: [
+      { num: "21°C", lbl: "lethal upper limit" },
+      { num: "50–80%", lbl: "range loss in Appalachians" },
+      { num: ">7 mg/L", lbl: "DO requirement" }
+    ]
+  },
+  {
+    eyebrow: "GROUNDWATER",
+    title: "Springs & groundwater restoration",
+    subtitle: "The hidden third of every river — and the single biggest blind spot in surface restoration.",
+    body: `
+      <p>Springs supply the <strong>baseflow</strong> that keeps streams cool, oxygenated, and flowing during
+      summer drought. They also host extraordinarily endemic biota — many spring-snail and amphipod species
+      are restricted to a single spring complex worldwide. Groundwater pumping, septic plume contamination,
+      land-use change, and climate-driven recharge declines are degrading springs at a rate that
+      surface-only monitoring largely misses.</p>
+      <p>Restoration: <strong>recharge area protection</strong> (zoning, agricultural BMPs, septic upgrades),
+      <strong>spring-run channel restoration</strong> (legacy livestock and impoundment effects), and
+      <strong>aquifer-level pumping reduction</strong>. The Edwards Aquifer, Florida's spring system, and the
+      Ozark spring complex are the canonical US examples. <em>You can't restore the river without restoring
+      what feeds it.</em></p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/07/Big_Spring_Missouri_1-02Aug08.jpg",
+    attrib: "Big Spring, Missouri · Wikimedia Commons",
+    pills: ["Baseflow", "Endemism", "Recharge protection"],
+    stats: [
+      { num: "1/3",  lbl: "of river flow from groundwater (avg)" },
+      { num: "100s", lbl: "spring-restricted endemic species" },
+      { num: "Edwards", lbl: "model aquifer-rule case" }
+    ]
+  },
+  {
+    eyebrow: "SYNTHESIS",
+    title: "Six rules for freshwater restoration",
+    subtitle: "What survives across the toolkit, from streams to springs.",
+    body: `
+      <p><strong>1. Diagnose before you design.</strong> Get the limiting process — flow, sediment, wood,
+      temperature, connectivity, water quality — right before specifying the intervention.<br/>
+      <strong>2. Treat the watershed, not the reach.</strong> A perfect 1-mile project below a degraded
+      basin will fail.<br/>
+      <strong>3. Add missing process, not missing form.</strong> Reintroduce wood, beavers, floods,
+      sediment, and shade — let the channel build itself.</p>
+      <p><strong>4. Reconnect before you rebuild.</strong> Lateral (floodplain), longitudinal (passage), and
+      vertical (groundwater) connectivity all come before structural work.<br/>
+      <strong>5. Monitor with controls, time, and biology.</strong> BACI ≥ 5 yr; track macroinvertebrates,
+      fish, and geomorphology — not just acres treated.<br/>
+      <strong>6. People are part of the watershed.</strong> Tenure, livelihoods, Tribal sovereignty, and
+      maintenance funding determine whether the ecology persists.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/dc/OncorhynchusTschawytscha2.jpg",
+    attrib: "Chinook salmon · Wikimedia Commons",
+    pills: ["Process > pattern", "Watershed > reach", "BACI ≥ 5 yr"]
+  },
+  {
+    eyebrow: "CLOSE",
+    title: "Thank you.",
+    subtitle: "Freshwater restoration ecology — the most leveraged, most undervalued conservation work on Earth.",
+    body: `
+      <p>Selected references for further reading:</p>
+      <p>
+      • Beechie, T.J. et al. (2010) <em>Process-based principles for restoring river ecosystems.</em> BioScience.<br/>
+      • Wheaton, J.M. et al. (2019) <em>Low-Tech Process-Based Restoration of Riverscapes — Design Manual.</em><br/>
+      • Reid, A.J. et al. (2019) <em>Emerging threats and persistent conservation challenges for freshwater biodiversity.</em> Biol. Reviews.<br/>
+      • Tickner, D. et al. (2020) <em>Bending the curve of global freshwater biodiversity loss: an emergency recovery plan.</em> BioScience.<br/>
+      • Schindler, D.W. (1974) <em>Eutrophication and recovery in experimental lakes.</em> Science.<br/>
+      • Naiman, R.J., Décamps, H., McClain, M. (2005) <em>Riparia.</em> Elsevier Academic Press.</p>
+      <p style="margin-top:14px;color:var(--accent);"><strong>Press F for fullscreen, P to auto-play, ← back to ecology overview.</strong></p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/44/AlgonquinBeaverDam.JPG",
+    attrib: "Beaver dam, Algonquin Park · Wikimedia Commons",
+    pills: ["References", "Q&A", "Acknowledgments"]
+  }
+];
+
+const deck = document.getElementById('deck');
+SLIDES.forEach((s) => {
+  const el = document.createElement('div');
+  el.className = 'slide';
+  const stats = (s.stats || []).map(st =>
+    `<div class="stat"><div class="num">${st.num}</div><div class="lbl">${st.lbl}</div></div>`
+  ).join('');
+  const pills = (s.pills || []).map(p => `<span class="pill">${p}</span>`).join('');
+  el.innerHTML = `
+    <div class="bg" style="background-image:url('${s.img}')"></div>
+    <div class="scrim"></div>
+    <div class="content">
+      <div class="eyebrow">${s.eyebrow}</div>
+      <h1 class="title">${s.title}</h1>
+      <div class="subtitle">${s.subtitle || ''}</div>
+      <div class="body">${s.body || ''}</div>
+      <div class="meta">${pills}</div>
+      ${stats ? `<div class="figures">${stats}</div>` : ''}
+    </div>
+    <div class="attrib">${s.attrib || ''}</div>
+  `;
+  deck.appendChild(el);
+});
+
+let curr = 0;
+const slides = [...document.querySelectorAll('.slide')];
+const total = slides.length;
+document.getElementById('total').textContent = total;
+const bar = document.getElementById('bar');
+const currLbl = document.getElementById('curr');
+
+function show(i) {
+  curr = (i + total) % total;
+  slides.forEach(s => s.classList.remove('active'));
+  slides[curr].classList.add('active');
+  const bg = slides[curr].querySelector('.bg');
+  bg.style.animation = 'none';
+  bg.offsetHeight;
+  bg.style.animation = '';
+  currLbl.textContent = curr + 1;
+  bar.style.width = (((curr + 1) / total) * 100) + '%';
+}
+function next() { show(curr + 1); }
+function prev() { show(curr - 1); }
+
+document.getElementById('next').onclick = next;
+document.getElementById('prev').onclick = prev;
+document.getElementById('zoneRight').onclick = next;
+document.getElementById('zoneLeft').onclick = prev;
+
+const fsBtn = document.getElementById('fs');
+fsBtn.onclick = () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+};
+
+let timer = null;
+const playBtn = document.getElementById('play');
+function setPlay(on) {
+  if (on) { timer = setInterval(next, 10000); playBtn.textContent = '❚❚ Pause'; }
+  else { clearInterval(timer); timer = null; playBtn.textContent = '▶ Auto-play'; }
+}
+playBtn.onclick = () => setPlay(!timer);
+
+document.addEventListener('keydown', e => {
+  switch (e.key) {
+    case 'ArrowRight': case ' ': case 'PageDown': next(); break;
+    case 'ArrowLeft':  case 'PageUp':  prev(); break;
+    case 'Home': show(0); break;
+    case 'End':  show(total - 1); break;
+    case 'f': case 'F': fsBtn.click(); break;
+    case 'p': case 'P': playBtn.click(); break;
+  }
+});
+
+show(0);
+</script>
+<!-- ─────────────────── NARRATION (Web Speech API) ─────────────────── -->
+<style>
+  .narr-fab {
+    position: fixed; right: 16px; bottom: 16px;
+    z-index: 55;
+    width: 52px; height: 52px;
+    border: 0; border-radius: 50%;
+    background: linear-gradient(135deg, #6ee7ff 0%, #2a8fc9 100%);
+    color: #022; font-size: 22px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.15) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .narr-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 30px rgba(110,231,255,0.5); }
+  .narr-fab.narrating {
+    background: linear-gradient(135deg, #ffd166 0%, #ff8c3c 100%);
+    animation: narrPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes narrPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,209,102,0.4), 0 8px 24px rgba(0,0,0,0.5); }
+    50%     { box-shadow: 0 0 0 14px rgba(255,209,102,0), 0 8px 24px rgba(0,0,0,0.5); }
+  }
+  .narr-panel {
+    position: fixed; right: 16px; bottom: 80px;
+    z-index: 56; width: 320px;
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.4);
+    border-radius: 14px;
+    padding: 16px; color: #f4fbff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: none;
+  }
+  .narr-panel.show { display: block; animation: narrIn 0.2s ease; }
+  @keyframes narrIn { from { transform: translateY(8px); opacity: 0; } to { opacity: 1; } }
+  .narr-panel header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    color: #6ee7ff; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+  }
+  .narr-panel header button { background: none; border: 0; color: #b9d6ea; font-size: 16px; cursor: pointer; }
+  .narr-panel label { display: block; color: #b9d6ea; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin: 8px 0 4px; }
+  .narr-panel select, .narr-panel input[type=range] {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f4fbff; padding: 6px 8px; border-radius: 6px; font-size: 12px;
+  }
+  .narr-panel .row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .narr-panel .row button {
+    padding: 8px 10px;
+    border: 1px solid rgba(110,231,255,0.4);
+    background: rgba(110,231,255,0.10);
+    color: #f4fbff; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 12px;
+  }
+  .narr-panel .row button.primary {
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    color: #022; border-color: transparent;
+  }
+  .narr-panel .row button:hover { filter: brightness(1.1); }
+  .narr-panel .row button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .narr-panel .hint { margin-top: 10px; color: #9bd6ff; font-size: 10px; line-height: 1.4; }
+  .narr-panel .voice-warn { margin-top: 8px; color: #ffd166; font-size: 10px; line-height: 1.4; display: none; }
+  .narr-panel .voice-warn.show { display: block; }
+  .narr-panel .narr-status {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    font-size: 11px; color: #9bd6ff;
+    text-align: center; min-height: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .narr-panel .narr-status.err { color: #ffd166; }
+  .narr-panel .narr-status.ok  { color: #7dffb1; }
+</style>
+
+<button class="narr-fab" id="narrFab" title="Listen to this page" aria-label="Narrate page">🎧</button>
+<div class="narr-panel" id="narrPanel" role="dialog" aria-label="Narration controls">
+  <header><span>🔊 Narration</span><button id="narrClose" aria-label="Close">×</button></header>
+  <label for="narrVoice">Voice</label>
+  <select id="narrVoice"><option>Loading voices…</option></select>
+  <div class="voice-warn" id="narrWarn">
+    For Microsoft natural voices, open this page in <b>Microsoft Edge</b>.
+    On macOS without Edge, the best free voices are <b>Samantha</b>, <b>Ava</b>, or <b>Allison</b>.
+  </div>
+  <label for="narrRate">Speed (<span id="narrRateLbl">1.00×</span>)</label>
+  <input type="range" id="narrRate" min="0.7" max="1.5" step="0.05" value="1.0"/>
+  <div class="row">
+    <button class="primary" id="narrPlay">▶ Read page</button>
+    <button id="narrPause">⏸</button>
+    <button id="narrStop">⏹</button>
+  </div>
+  <div class="hint">Tip — highlight any text first, then press Read to hear just that.</div>
+  <div class="narr-status" id="narrStatus"></div>
+</div>
+
+<script>
+(() => {
+  if (!('speechSynthesis' in window)) { console.warn('[narr] speechSynthesis not supported'); return; }
+  const synth = window.speechSynthesis;
+
+  let voices = [];
+  let chunks = [];
+  let chunkIdx = 0;
+  let active = false;
+  let keepalive = null;
+
+  const $  = id => document.getElementById(id);
+  const voiceSel = $('narrVoice');
+  const rateInp  = $('narrRate');
+  const rateLbl  = $('narrRateLbl');
+  const fab      = $('narrFab');
+  const panel    = $('narrPanel');
+  const warn     = $('narrWarn');
+  const status   = $('narrStatus');
+
+  function setStatus(msg, kind) {
+    if (!status) return;
+    status.textContent = msg || '';
+    status.classList.remove('err', 'ok');
+    if (kind === 'err') status.classList.add('err');
+    if (kind === 'ok')  status.classList.add('ok');
+  }
+
+  function score(v) {
+    let s = 0;
+    if (/^en/i.test(v.lang)) s += 200;
+    if (/^en[-_]US/i.test(v.lang)) s += 30;
+    if (/(Natural|Neural|Online)/i.test(v.name)) s += 200;
+    if (/Microsoft/i.test(v.name)) s += 60;
+    if (/Aria|Jenny|Sonia|Emma|Michelle/i.test(v.name)) s += 80;
+    if (/Ava \(Premium\)|Samantha \(Premium\)|Allison \(Premium\)|Susan \(Premium\)/i.test(v.name)) s += 70;
+    if (/Ava|Samantha|Allison|Susan|Karen|Tessa|Moira|Fiona/i.test(v.name)) s += 35;
+    if (/Google.*US English/i.test(v.name)) s += 25;
+    if (/Daniel|Fred|Alex|Ralph|Bruce|Tom|Mark|Guy/i.test(v.name)) s -= 30;
+    if (v.default) s += 3;
+    return s;
+  }
+
+  function loadVoices() {
+    const all = synth.getVoices();
+    if (!all || all.length === 0) return false;
+    voices = all.slice().sort((a,b) => score(b) - score(a));
+    voiceSel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const tag = /(Natural|Neural|Online)/i.test(v.name) ? ' ✨'
+                : /Premium/i.test(v.name) ? ' ★' : '';
+      opt.textContent = `${v.name}${tag} · ${v.lang}`;
+      voiceSel.appendChild(opt);
+    });
+    warn.classList.toggle('show', !voices.some(v => /(Natural|Neural)/i.test(v.name)));
+    return true;
+  }
+
+  // initial attempt + voiceschanged + 1s polling fallback
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.addEventListener('voiceschanged', loadVoices);
+  let polls = 0;
+  const pollVoices = setInterval(() => {
+    if (loadVoices() || ++polls > 20) clearInterval(pollVoices);
+  }, 100);
+
+  rateInp.addEventListener('input', () => {
+    rateLbl.textContent = parseFloat(rateInp.value).toFixed(2) + '×';
+  });
+
+  function gatherText() {
+    const SEL = 'h1, h2, h3, h4, .lede, .subtitle, .body p, .body li, p, li, blockquote';
+    const SKIP = [
+      '.topnav', '.ctrl', '.ctrls', '.narr-panel', '.narr-fab',
+      '.toc-veil', '.toc-card', '.modal-veil', '.modal',
+      '.quiz', 'footer', '.credit', '.attrib', '.stat-chip',
+      '.pills', '.pill', '.tick', '.fact', '.tool',
+      '.hero-tag', '.scroll-cue', '.hero-scroll-hint',
+      '.deck-title', '.counter', '.hint', '.meta-row', '.open', '.tag',
+      '.slide:not(.active)'   // restoration deck: only read the visible slide
+    ].join(',');
+    return Array.from(document.querySelectorAll(SEL))
+      .filter(el => !el.closest(SKIP))
+      .filter(el => {
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0.05;
+      })
+      .map(el => el.textContent.replace(/\s+/g, ' ').trim())
+      .filter(t => t && t.length > 1);
+  }
+
+  function startKeepalive() {
+    stopKeepalive();
+    // Chrome cuts speech off after ~15s; pause+resume restarts the clock
+    keepalive = setInterval(() => {
+      if (active && !synth.paused && synth.speaking) {
+        synth.pause(); synth.resume();
+      }
+    }, 10000);
+  }
+  function stopKeepalive() { if (keepalive) clearInterval(keepalive); keepalive = null; }
+
+  function speakNext() {
+    if (!active) return;
+    if (chunkIdx >= chunks.length) {
+      active = false; updateUI();
+      stopKeepalive();
+      setStatus('✓ Done.', 'ok');
+      return;
+    }
+    setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    const u = new SpeechSynthesisUtterance(chunks[chunkIdx]);
+    const v = voices[+voiceSel.value];
+    if (v) u.voice = v;
+    u.rate  = parseFloat(rateInp.value) || 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    u.onend = () => { chunkIdx++; speakNext(); };
+    u.onerror = (e) => {
+      console.warn('[narr] utterance error', e);
+      chunkIdx++; speakNext();
+    };
+    try {
+      synth.speak(u);
+    } catch (err) {
+      console.error('[narr] speak threw', err);
+      setStatus('Speak failed: ' + err.message, 'err');
+      active = false; updateUI(); stopKeepalive();
+    }
+  }
+
+  function play() {
+    // pick text first
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().trim().length > 4) {
+      chunks = sel.toString().split(/(?<=[.!?])\s+/).filter(Boolean);
+    } else {
+      chunks = gatherText();
+    }
+    if (!chunks.length) { setStatus('No readable text found.', 'err'); return; }
+
+    // make sure voices have a chance to load
+    if (voices.length === 0) loadVoices();
+
+    if (synth.speaking || synth.pending) synth.cancel();
+
+    chunkIdx = 0;
+    active = true;
+    updateUI();
+    startKeepalive();
+    setStatus(`Loading ${chunks.length} segments…`);
+
+    // Chrome: small delay after cancel prevents the new speak() from getting eaten
+    setTimeout(() => {
+      if (!active) return;
+      // If voices STILL aren't loaded, speak with default voice (synth uses system default)
+      speakNext();
+    }, 80);
+  }
+
+  function togglePause() {
+    if (!active) return;
+    if (synth.speaking && !synth.paused) {
+      synth.pause(); setStatus('Paused.');
+    } else if (synth.paused) {
+      synth.resume(); setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    }
+  }
+
+  function stop() {
+    synth.cancel();
+    active = false;
+    stopKeepalive();
+    updateUI();
+    setStatus('Stopped.');
+  }
+
+  function updateUI() {
+    fab.classList.toggle('narrating', active);
+    fab.textContent = active ? '🔊' : '🎧';
+  }
+
+  fab.addEventListener('click', () => panel.classList.toggle('show'));
+  $('narrClose').onclick = () => panel.classList.remove('show');
+  $('narrPlay').onclick  = play;
+  $('narrPause').onclick = togglePause;
+  $('narrStop').onclick  = stop;
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('show')) panel.classList.remove('show');
+  });
+  window.addEventListener('beforeunload', () => synth.cancel());
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<style>
+  html,body { margin:0; padding:0; height:100%; background:#000; overflow:hidden;
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+    color:#f4fbff; }
+  .stage {
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(255,233,168,0.4) 0%, rgba(255,233,168,0) 55%),
+      linear-gradient(180deg, #2a8fc9 0%, #0a4d8c 35%, #052a52 70%, #021024 100%);
+    display: grid; place-items: center;
+  }
+  .stage::before {
+    content:""; position:absolute; inset:0;
+    background: repeating-linear-gradient(100deg, rgba(255,255,255,0.10) 0 6px, transparent 6px 90px);
+    mix-blend-mode: screen; animation: drift 16s linear infinite;
+  }
+  @keyframes drift { 0%{transform:translateX(-50px);} 100%{transform:translateX(50px);} }
+  .bubble { position:absolute; bottom:-30px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #ffffffaa, #ffffff22 60%, transparent 70%);
+    animation: bubbleUp linear infinite; }
+  @keyframes bubbleUp {
+    0%   { transform: translateY(0); opacity: 0; }
+    10%  { opacity: 0.85; }
+    100% { transform: translateY(-110vh); opacity: 0; }
+  }
+  .center {
+    position: relative; z-index: 2; text-align: center; padding: 0 6vw;
+    animation: rise 1.2s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes rise { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform:none; } }
+  .eyebrow {
+    color:#6ee7ff; font-weight:800; letter-spacing:6px;
+    text-transform:uppercase; font-size: 14px;
+    margin-bottom: 22px;
+    animation: fadeIn 1.2s 0.2s ease both;
+  }
+  h1 {
+    margin: 0;
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -1.5px;
+    text-shadow: 0 8px 50px rgba(0,0,0,0.6);
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #6ee7ff, #ffe9a8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    margin: 26px auto 0;
+    max-width: 760px;
+    font-size: 22px; line-height: 1.4;
+    color: #cdeeff;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+    animation: fadeIn 1.2s 0.4s ease both;
+  }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .pill-row {
+    display:inline-flex; gap:12px; margin-top:34px;
+    animation: fadeIn 1.2s 0.6s ease both;
+  }
+  .pill {
+    padding:8px 16px; background:rgba(2,16,36,0.55);
+    border:1px solid rgba(110,231,255,0.45);
+    border-radius:999px;
+    color:#6ee7ff; font-weight:700; letter-spacing:2px;
+    font-size:11px; text-transform:uppercase;
+    backdrop-filter: blur(6px);
+  }
+  /* organism flying across */
+  .creature {
+    position:absolute; top:42%; left:-200px;
+    animation: fly 7s linear forwards;
+  }
+  @keyframes fly { to { transform: translateX(calc(100vw + 400px)); } }
+</style></head>
+<body>
+<div class="stage">
+  <div class="bubble" style="left:8%;  width:7px; height:7px; animation-duration:13s;"></div>
+  <div class="bubble" style="left:18%; width:11px;height:11px;animation-duration:18s; animation-delay:1s;"></div>
+  <div class="bubble" style="left:34%; width:6px; height:6px; animation-duration:11s; animation-delay:2s;"></div>
+  <div class="bubble" style="left:52%; width:9px; height:9px; animation-duration:15s; animation-delay:0.5s;"></div>
+  <div class="bubble" style="left:68%; width:8px; height:8px; animation-duration:14s; animation-delay:3s;"></div>
+  <div class="bubble" style="left:82%; width:12px;height:12px;animation-duration:19s; animation-delay:1.5s;"></div>
+  <div class="bubble" style="left:92%; width:6px; height:6px; animation-duration:12s;"></div>
+
+  <!-- swimming whale -->
+  <svg class="creature" width="320" height="120" viewBox="0 0 460 140" style="opacity:0.55;">
+    <path d="M10 75 Q 60 30 220 50 Q 360 65 410 75 Q 360 95 220 105 Q 60 110 10 75 Z" fill="#3a6b9c" stroke="#02132a" stroke-width="2.5"/>
+    <path d="M30 78 Q 100 95 240 92 Q 360 88 400 80 Q 360 100 240 105 Q 100 108 30 78 Z" fill="#7aa3c9"/>
+    <path d="M410 75 L 458 38 L 440 75 L 458 112 Z" fill="#3a6b9c" stroke="#02132a" stroke-width="2.5"/>
+    <circle cx="60" cy="70" r="3" fill="#fff"/>
+    <circle cx="60" cy="70" r="1.5" fill="#022"/>
+  </svg>
+
+  <div class="center">
+    <div class="eyebrow">Dan's Project · Aquatic Ecology &amp; Restoration</div>
+    <h1>From a single H₂O molecule<br/>to <em>a thirty-meter whale</em>.</h1>
+    <p class="sub">A four-part field guide to the science of the sea — built entirely in single-page HTML.</p>
+    <div class="pill-row">
+      <span class="pill">4 features</span>
+      <span class="pill">Animated SVG</span>
+      <span class="pill">Offline-ready</span>
+      <span class="pill">Narrated</span>
+    </div>
+  </div>
+</div>
+</body></html>

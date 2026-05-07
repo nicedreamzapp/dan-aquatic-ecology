@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dan's Aquatic Ecology Project</title>
+<style>
+  :root {
+    --ink:    #f4fbff;
+    --muted:  #b9d6ea;
+    --accent: #6ee7ff;
+    --warm:   #ffd166;
+    --leaf:   #7dffb1;
+    --deep:   #021024;
+    --mid:    #052a52;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    background: #000;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+  }
+  a { color: var(--accent); }
+
+  /* ─── ambient bubbles ─── */
+  .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bubble {
+    position: absolute; bottom: -30px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffffff99, #ffffff22 60%, transparent 70%);
+    animation: bubbleUp linear infinite;
+  }
+  @keyframes bubbleUp {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 0.8; }
+    100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
+  }
+
+  main { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 60px 6vw 80px; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    padding: 60px 0 50px;
+    text-align: center;
+  }
+  .hero::before {  /* sun glow */
+    content: "";
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 540px; height: 540px;
+    background: radial-gradient(circle, rgba(255,233,168,0.35) 0%, rgba(255,233,168,0) 70%);
+    pointer-events: none;
+    animation: sunPulse 7s ease-in-out infinite;
+  }
+  @keyframes sunPulse {
+    0%,100% { opacity: 0.85; transform: translateX(-50%) scale(1); }
+    50%     { opacity: 1;    transform: translateX(-50%) scale(1.06); }
+  }
+  .eyebrow {
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 4px;
+    font-size: 12px; font-weight: 800;
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(34px, 5.6vw, 64px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.05;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #6ee7ff, #ffe9a8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .lede {
+    margin: 18px auto 0;
+    max-width: 720px;
+    font-size: clamp(15px, 1.5vw, 19px);
+    color: var(--muted);
+  }
+  .meta-row {
+    margin-top: 22px;
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .meta-row span { display: inline-flex; gap: 8px; align-items: center; }
+  .meta-row .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  /* ─── CARDS ─── */
+  .cards {
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.25);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    display: flex; flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(110,231,255,0.4);
+  }
+  .card .preview {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: linear-gradient(180deg, #7ec8e3 0%, #2a8fc9 30%, #0a4d8c 100%);
+  }
+  .card .preview svg {
+    width: 100%; height: 100%;
+  }
+  .card .body {
+    padding: 18px 20px 22px;
+  }
+  .card h3 {
+    margin: 0 0 6px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card .tag {
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1.8px;
+    font-size: 10px; font-weight: 800;
+  }
+  .card.warm .tag { color: var(--warm); }
+  .card.leaf .tag { color: var(--leaf); }
+  .card p {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .card .open {
+    margin-top: 14px;
+    color: var(--accent);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .card.warm .open { color: var(--warm); }
+  .card.leaf .open { color: var(--leaf); }
+  .card .open span { transition: transform 0.2s ease; }
+  .card:hover .open span { transform: translateX(4px); }
+
+  /* swimming animation in card SVG previews */
+  .swim-l2r { animation: swimL2R 22s linear infinite; }
+  @keyframes swimL2R {
+    0%   { transform: translateX(-25%); }
+    100% { transform: translateX(125%); }
+  }
+  .bob { animation: bob 4s ease-in-out infinite; }
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-6px); }
+  }
+  .spin { animation: spinSlow 20s linear infinite; transform-origin: center; }
+  @keyframes spinSlow { to { transform: rotate(360deg); } }
+  .wiggle { animation: wig 2s ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes wig { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+
+  /* ─── about / footer ─── */
+  .about {
+    margin-top: 72px;
+    padding: 30px 26px;
+    background: rgba(2,16,36,0.5);
+    border: 1px solid rgba(110,231,255,0.2);
+    border-radius: 16px;
+  }
+  .about h2 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .about p {
+    margin: 6px 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 880px;
+  }
+  footer {
+    margin-top: 36px;
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+    padding: 16px 0 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient">
+  <div class="bubble" style="left:6%;  width:6px;  height:6px;  animation-duration:14s;"></div>
+  <div class="bubble" style="left:14%; width:10px; height:10px; animation-duration:18s; animation-delay:3s;"></div>
+  <div class="bubble" style="left:22%; width:5px;  height:5px;  animation-duration:11s; animation-delay:1s;"></div>
+  <div class="bubble" style="left:38%; width:8px;  height:8px;  animation-duration:16s; animation-delay:6s;"></div>
+  <div class="bubble" style="left:55%; width:7px;  height:7px;  animation-duration:13s; animation-delay:2s;"></div>
+  <div class="bubble" style="left:67%; width:11px; height:11px; animation-duration:19s; animation-delay:4s;"></div>
+  <div class="bubble" style="left:78%; width:6px;  height:6px;  animation-duration:12s; animation-delay:0.5s;"></div>
+  <div class="bubble" style="left:88%; width:9px;  height:9px;  animation-duration:17s; animation-delay:5s;"></div>
+</div>
+
+<main>
+
+  <section class="hero">
+    <div class="eyebrow">By Dan Close · HSU Master's Thesis · Cal Poly Humboldt Marine Sciences</div>
+    <h1>From a single H₂O molecule to <em>a thirty-meter whale</em>.</h1>
+    <p class="lede">
+      A four-part field guide to the science of aquatic ecosystems and the people working to put them back together. All offline-friendly. All animated. All single-page.
+    </p>
+    <div class="meta-row">
+      <span><span class="dot"></span>4 features</span>
+      <span><span class="dot"></span>SVG-only · works offline</span>
+      <span><span class="dot"></span>Narration built in</span>
+    </div>
+  </section>
+
+  <section class="cards">
+
+    <a class="card" href="dan-aquatic-ecology.html">
+      <div class="preview">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <!-- water gradient already on parent -->
+          <defs>
+            <radialGradient id="sun1" cx="50%" cy="0%" r="60%">
+              <stop offset="0%" stop-color="#ffe9a8" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#ffe9a8" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="400" height="250" fill="url(#sun1)"/>
+          <!-- light rays -->
+          <line x1="80" y1="0" x2="120" y2="120" stroke="#ffe9a8" stroke-opacity="0.18" stroke-width="14"/>
+          <line x1="220" y1="0" x2="240" y2="160" stroke="#ffe9a8" stroke-opacity="0.14" stroke-width="20"/>
+          <line x1="340" y1="0" x2="320" y2="140" stroke="#ffe9a8" stroke-opacity="0.16" stroke-width="14"/>
+          <!-- molecule (top) -->
+          <g class="spin" transform="translate(60,40)">
+            <line x1="0" y1="0" x2="-16" y2="-14" stroke="#9be8ff" stroke-width="3"/>
+            <line x1="0" y1="0" x2="16" y2="-14" stroke="#9be8ff" stroke-width="3"/>
+            <circle cx="0" cy="0" r="10" fill="#ff5b6e"/>
+            <circle cx="-16" cy="-14" r="6" fill="#fff"/>
+            <circle cx="16" cy="-14" r="6" fill="#fff"/>
+          </g>
+          <!-- small fish school (mid) -->
+          <g class="swim-l2r" style="animation-duration: 22s;">
+            <g transform="translate(0,110)">
+              <path d="M0 0 Q 12 -8 30 0 Q 12 8 0 0 Z" fill="#7fd6ff" stroke="#0a4d8c" stroke-width="1"/>
+              <path d="M30 0 L 38 -5 L 38 5 Z" fill="#7fd6ff" stroke="#0a4d8c" stroke-width="1"/>
+              <circle cx="24" cy="-2" r="1.5" fill="#022"/>
+            </g>
+            <g transform="translate(40,124)">
+              <path d="M0 0 Q 10 -7 26 0 Q 10 7 0 0 Z" fill="#a4e2ff" stroke="#0a4d8c" stroke-width="1"/>
+              <path d="M26 0 L 33 -4 L 33 4 Z" fill="#a4e2ff" stroke="#0a4d8c" stroke-width="1"/>
+            </g>
+          </g>
+          <!-- whale (bottom) -->
+          <g class="bob" transform="translate(40,170)">
+            <path d="M0 10 Q 30 -10 140 0 Q 250 10 290 14 Q 250 22 140 26 Q 30 32 0 16 Z" fill="#3a6b9c" stroke="#02132a" stroke-width="2"/>
+            <path d="M14 14 Q 60 22 160 22 Q 240 22 280 18 Q 240 28 160 30 Q 60 30 14 14 Z" fill="#7aa3c9"/>
+            <path d="M290 14 L 320 -4 L 308 14 L 320 30 Z" fill="#3a6b9c" stroke="#02132a" stroke-width="2"/>
+            <circle cx="20" cy="14" r="2.5" fill="#fff"/>
+            <circle cx="20" cy="14" r="1.5" fill="#022"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="tag">Feature 1 · Overview</div>
+        <h3>🌊 Aquatic Ecology</h3>
+        <p>From a water molecule to a blue whale — eleven orders of magnitude on one screen, plus a depth tour you can scroll, click, and quiz yourself on.</p>
+        <div class="open">Open <span>→</span></div>
+      </div>
+    </a>
+
+    <a class="card" href="dan-restoration-ecology.html">
+      <div class="preview" style="background: linear-gradient(180deg, #052a52 0%, #021024 100%);">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <!-- coral reef preview -->
+          <rect x="0" y="0" width="400" height="250" fill="url(#sun1)"/>
+          <line x1="80" y1="0" x2="120" y2="180" stroke="#ffe9a8" stroke-opacity="0.14" stroke-width="14"/>
+          <line x1="280" y1="0" x2="240" y2="180" stroke="#ffe9a8" stroke-opacity="0.10" stroke-width="20"/>
+          <!-- floor -->
+          <path d="M0 220 Q 100 200 200 215 Q 300 230 400 200 L 400 250 L 0 250 Z" fill="#3d2a14"/>
+          <!-- coral cluster -->
+          <g class="bob">
+            <path d="M70 220 Q 60 180 70 150 Q 80 120 70 90" stroke="#ff6f8a" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M70 170 Q 50 160 42 140" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M70 170 Q 90 160 98 140" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="bob" style="animation-delay: -1.5s;">
+            <path d="M150 220 Q 140 180 150 150 Q 160 120 150 100" stroke="#ff8c8c" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M150 170 Q 130 160 122 140" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M150 170 Q 170 160 178 140" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- kelp -->
+          <g class="wiggle" style="transform-origin: 230px 220px;">
+            <path d="M230 220 Q 225 180 232 140 Q 224 100 232 60" stroke="#3aa84a" stroke-width="4" fill="none"/>
+            <ellipse cx="226" cy="180" rx="6" ry="3" fill="#3aa84a"/>
+            <ellipse cx="234" cy="140" rx="7" ry="3" fill="#3aa84a"/>
+            <ellipse cx="226" cy="100" rx="6" ry="3" fill="#3aa84a"/>
+          </g>
+          <g class="wiggle" style="transform-origin: 250px 220px; animation-delay: -1s;">
+            <path d="M250 220 Q 244 180 252 140 Q 242 100 252 50" stroke="#2d6e2d" stroke-width="4" fill="none"/>
+            <ellipse cx="246" cy="170" rx="6" ry="3" fill="#2d6e2d"/>
+            <ellipse cx="254" cy="120" rx="7" ry="3" fill="#2d6e2d"/>
+          </g>
+          <!-- starfish -->
+          <g class="spin" style="transform-origin: 320px 200px; animation-duration: 30s;">
+            <polygon points="320,180 326,196 343,196 329,206 335,224 320,214 305,224 311,206 297,196 314,196"
+                     fill="#ff9844" stroke="#7a3a10" stroke-width="1.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="tag">Feature 2 · Slide tour</div>
+        <h3>🌊 Marine Restoration</h3>
+        <p>A thesis-grade slide deck on coral, mangrove, oyster, seagrass, kelp, salt-marsh, and MPA work. Auto-play, fullscreen, arrow-key driven.</p>
+        <div class="open">Open <span>→</span></div>
+      </div>
+    </a>
+
+    <a class="card leaf" href="dan-freshwater-restoration.html">
+      <div class="preview" style="background: linear-gradient(180deg, #1a4d2e 0%, #052a52 100%);">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <!-- river preview -->
+          <rect x="0" y="0" width="400" height="250" fill="url(#sun1)"/>
+          <!-- river bend -->
+          <path d="M0 150 Q 80 130 160 160 Q 240 200 320 170 Q 380 155 400 165 L 400 250 L 0 250 Z"
+                fill="#0a4d8c" opacity="0.9"/>
+          <path d="M0 150 Q 80 130 160 160 Q 240 200 320 170 Q 380 155 400 165"
+                stroke="#7dffb1" stroke-width="2" fill="none" opacity="0.6"/>
+          <!-- riparian trees -->
+          <g transform="translate(40,90)">
+            <rect x="-3" y="40" width="6" height="20" fill="#5a3a14"/>
+            <ellipse cx="0" cy="36" rx="22" ry="22" fill="#3aa84a"/>
+            <ellipse cx="-10" cy="28" rx="14" ry="12" fill="#5cd66e"/>
+          </g>
+          <g transform="translate(110,80)">
+            <rect x="-3" y="44" width="6" height="22" fill="#5a3a14"/>
+            <ellipse cx="0" cy="40" rx="20" ry="20" fill="#2d6e2d"/>
+          </g>
+          <g transform="translate(280,75)">
+            <rect x="-3" y="48" width="6" height="22" fill="#5a3a14"/>
+            <ellipse cx="0" cy="42" rx="24" ry="22" fill="#3aa84a"/>
+            <ellipse cx="10" cy="34" rx="12" ry="10" fill="#5cd66e"/>
+          </g>
+          <!-- beaver -->
+          <g class="bob" style="animation-delay: -1s;" transform="translate(180,150)">
+            <ellipse cx="0" cy="0" rx="22" ry="12" fill="#5a3a14" stroke="#2a1a04" stroke-width="2"/>
+            <circle cx="-18" cy="-3" r="8" fill="#5a3a14" stroke="#2a1a04" stroke-width="2"/>
+            <circle cx="-22" cy="-6" r="2" fill="#fff"/>
+            <circle cx="-22" cy="-6" r="1" fill="#022"/>
+            <ellipse cx="20" cy="2" rx="10" ry="4" fill="#3a2208"/>
+          </g>
+          <!-- fish jumping -->
+          <g class="bob" style="animation-delay: -2s;" transform="translate(330,140)">
+            <path d="M0 0 Q 8 -6 18 0 Q 8 6 0 0 Z" fill="#7fd6ff" stroke="#0a4d8c" stroke-width="1"/>
+            <path d="M18 0 L 24 -3 L 24 3 Z" fill="#7fd6ff"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="tag">Feature 3 · Slide tour</div>
+        <h3>🏞 Freshwater Restoration</h3>
+        <p>Rivers, lakes, wetlands, beavers, dam removal, urban green infrastructure — the most threatened ecosystems on Earth, and how to bring them back.</p>
+        <div class="open">Open <span>→</span></div>
+      </div>
+    </a>
+
+    <a class="card warm" href="dan-scientific-diving.html">
+      <div class="preview" style="background: linear-gradient(180deg, #0a4d8c 0%, #021024 100%);">
+        <svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice">
+          <rect x="0" y="0" width="400" height="250" fill="url(#sun1)"/>
+          <!-- transect tape -->
+          <line x1="20" y1="195" x2="380" y2="200" stroke="#ffd166" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <!-- floor -->
+          <path d="M0 220 Q 100 200 200 215 Q 300 230 400 200 L 400 250 L 0 250 Z" fill="#3d2a14"/>
+          <!-- corals on floor -->
+          <path d="M50 220 Q 40 195 50 175" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M340 220 Q 350 195 340 175" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <!-- diver -->
+          <g class="bob" transform="translate(110,90)">
+            <ellipse cx="40" cy="22" rx="40" ry="14" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+            <circle cx="6" cy="22" r="11" fill="#0a172a"/>
+            <rect x="-4" y="20" width="14" height="6" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+            <rect x="60" y="10" width="16" height="28" rx="3" fill="#888" stroke="#444" stroke-width="2"/>
+            <path d="M76 18 Q 120 24 150 26" stroke="#1a2f4d" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <circle cx="155" cy="26" r="5" fill="#ff8c8c" stroke="#7a1010" stroke-width="2"/>
+            <path d="M76 22 Q 130 14 160 6 L 174 4 L 172 16 L 160 22 Q 130 26 86 30 Z" fill="#0a172a"/>
+            <!-- bubbles -->
+            <circle cx="-2" cy="10" r="3" fill="#fff" opacity="0.7"/>
+            <circle cx="-6" cy="0" r="2" fill="#fff" opacity="0.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="body">
+        <div class="tag">Feature 4 · Deep-dive story</div>
+        <h3>🤿 Scientific Diving</h3>
+        <p>The hands and eyes of marine restoration. A 13-chapter narrative on how divers actually do the work — transects, outplanting, photogrammetry, lionfish.</p>
+        <div class="open">Open <span>→</span></div>
+      </div>
+    </a>
+
+  </section>
+
+  <section class="about">
+    <h2>About this project</h2>
+    <p>
+      Four single-file HTML pieces by <strong>Dan Close</strong> — an HSU master's thesis project at <strong>Cal Poly Humboldt Marine Sciences</strong>. Every animation is inline SVG, every page works offline, every page reads itself aloud (tap the 🎧 button — bottom-right of any feature page).
+    </p>
+    <p>
+      For Microsoft natural neural voices, open the pages in <a href="https://www.microsoft.com/edge" target="_blank" rel="noopener">Microsoft Edge</a>; on macOS without Edge, the narration falls back to high-quality system voices like Samantha, Ava, or Allison.
+    </p>
+  </section>
+
+  <footer>
+    Made with care · no analytics · no trackers · just HTML.
+  </footer>
+
+</main>
+
+<!-- ─────────────────── NARRATION (Web Speech API) ─────────────────── -->
+<style>
+  .narr-fab {
+    position: fixed; right: 16px; bottom: 16px;
+    z-index: 55;
+    width: 52px; height: 52px;
+    border: 0; border-radius: 50%;
+    background: linear-gradient(135deg, #6ee7ff 0%, #2a8fc9 100%);
+    color: #022; font-size: 22px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.15) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .narr-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 30px rgba(110,231,255,0.5); }
+  .narr-fab.narrating {
+    background: linear-gradient(135deg, #ffd166 0%, #ff8c3c 100%);
+    animation: narrPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes narrPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,209,102,0.4), 0 8px 24px rgba(0,0,0,0.5); }
+    50%     { box-shadow: 0 0 0 14px rgba(255,209,102,0), 0 8px 24px rgba(0,0,0,0.5); }
+  }
+  .narr-panel {
+    position: fixed; right: 16px; bottom: 80px;
+    z-index: 56; width: 320px;
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.4);
+    border-radius: 14px;
+    padding: 16px; color: #f4fbff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: none;
+  }
+  .narr-panel.show { display: block; animation: narrIn 0.2s ease; }
+  @keyframes narrIn { from { transform: translateY(8px); opacity: 0; } to { opacity: 1; } }
+  .narr-panel header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    color: #6ee7ff; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+  }
+  .narr-panel header button { background: none; border: 0; color: #b9d6ea; font-size: 16px; cursor: pointer; }
+  .narr-panel label { display: block; color: #b9d6ea; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin: 8px 0 4px; }
+  .narr-panel select, .narr-panel input[type=range] {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f4fbff; padding: 6px 8px; border-radius: 6px; font-size: 12px;
+  }
+  .narr-panel .row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .narr-panel .row button {
+    padding: 8px 10px;
+    border: 1px solid rgba(110,231,255,0.4);
+    background: rgba(110,231,255,0.10);
+    color: #f4fbff; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 12px;
+  }
+  .narr-panel .row button.primary {
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    color: #022; border-color: transparent;
+  }
+  .narr-panel .row button:hover { filter: brightness(1.1); }
+  .narr-panel .row button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .narr-panel .hint { margin-top: 10px; color: #9bd6ff; font-size: 10px; line-height: 1.4; }
+  .narr-panel .voice-warn { margin-top: 8px; color: #ffd166; font-size: 10px; line-height: 1.4; display: none; }
+  .narr-panel .voice-warn.show { display: block; }
+  .narr-panel .narr-status {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    font-size: 11px; color: #9bd6ff;
+    text-align: center; min-height: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .narr-panel .narr-status.err { color: #ffd166; }
+  .narr-panel .narr-status.ok  { color: #7dffb1; }
+</style>
+
+<button class="narr-fab" id="narrFab" title="Listen to this page" aria-label="Narrate page">🎧</button>
+<div class="narr-panel" id="narrPanel" role="dialog" aria-label="Narration controls">
+  <header><span>🔊 Narration</span><button id="narrClose" aria-label="Close">×</button></header>
+  <label for="narrVoice">Voice</label>
+  <select id="narrVoice"><option>Loading voices…</option></select>
+  <div class="voice-warn" id="narrWarn">
+    For Microsoft natural voices, open this page in <b>Microsoft Edge</b>.
+    On macOS without Edge, the best free voices are <b>Samantha</b>, <b>Ava</b>, or <b>Allison</b>.
+  </div>
+  <label for="narrRate">Speed (<span id="narrRateLbl">1.00×</span>)</label>
+  <input type="range" id="narrRate" min="0.7" max="1.5" step="0.05" value="1.0"/>
+  <div class="row">
+    <button class="primary" id="narrPlay">▶ Read page</button>
+    <button id="narrPause">⏸</button>
+    <button id="narrStop">⏹</button>
+  </div>
+  <div class="hint">Tip — highlight any text first, then press Read to hear just that.</div>
+  <div class="narr-status" id="narrStatus"></div>
+</div>
+
+<script>
+(() => {
+  if (!('speechSynthesis' in window)) { console.warn('[narr] speechSynthesis not supported'); return; }
+  const synth = window.speechSynthesis;
+
+  let voices = [];
+  let chunks = [];
+  let chunkIdx = 0;
+  let active = false;
+  let keepalive = null;
+
+  const $  = id => document.getElementById(id);
+  const voiceSel = $('narrVoice');
+  const rateInp  = $('narrRate');
+  const rateLbl  = $('narrRateLbl');
+  const fab      = $('narrFab');
+  const panel    = $('narrPanel');
+  const warn     = $('narrWarn');
+  const status   = $('narrStatus');
+
+  function setStatus(msg, kind) {
+    if (!status) return;
+    status.textContent = msg || '';
+    status.classList.remove('err', 'ok');
+    if (kind === 'err') status.classList.add('err');
+    if (kind === 'ok')  status.classList.add('ok');
+  }
+
+  function score(v) {
+    let s = 0;
+    if (/^en/i.test(v.lang)) s += 200;
+    if (/^en[-_]US/i.test(v.lang)) s += 30;
+    if (/(Natural|Neural|Online)/i.test(v.name)) s += 200;
+    if (/Microsoft/i.test(v.name)) s += 60;
+    if (/Aria|Jenny|Sonia|Emma|Michelle/i.test(v.name)) s += 80;
+    if (/Ava \(Premium\)|Samantha \(Premium\)|Allison \(Premium\)|Susan \(Premium\)/i.test(v.name)) s += 70;
+    if (/Ava|Samantha|Allison|Susan|Karen|Tessa|Moira|Fiona/i.test(v.name)) s += 35;
+    if (/Google.*US English/i.test(v.name)) s += 25;
+    if (/Daniel|Fred|Alex|Ralph|Bruce|Tom|Mark|Guy/i.test(v.name)) s -= 30;
+    if (v.default) s += 3;
+    return s;
+  }
+
+  function loadVoices() {
+    const all = synth.getVoices();
+    if (!all || all.length === 0) return false;
+    voices = all.slice().sort((a,b) => score(b) - score(a));
+    voiceSel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const tag = /(Natural|Neural|Online)/i.test(v.name) ? ' ✨'
+                : /Premium/i.test(v.name) ? ' ★' : '';
+      opt.textContent = `${v.name}${tag} · ${v.lang}`;
+      voiceSel.appendChild(opt);
+    });
+    warn.classList.toggle('show', !voices.some(v => /(Natural|Neural)/i.test(v.name)));
+    return true;
+  }
+
+  // initial attempt + voiceschanged + 1s polling fallback
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.addEventListener('voiceschanged', loadVoices);
+  let polls = 0;
+  const pollVoices = setInterval(() => {
+    if (loadVoices() || ++polls > 20) clearInterval(pollVoices);
+  }, 100);
+
+  rateInp.addEventListener('input', () => {
+    rateLbl.textContent = parseFloat(rateInp.value).toFixed(2) + '×';
+  });
+
+  function gatherText() {
+    const SEL = 'h1, h2, h3, h4, .lede, .subtitle, .body p, .body li, p, li, blockquote';
+    const SKIP = [
+      '.topnav', '.ctrl', '.ctrls', '.narr-panel', '.narr-fab',
+      '.toc-veil', '.toc-card', '.modal-veil', '.modal',
+      '.quiz', 'footer', '.credit', '.attrib', '.stat-chip',
+      '.pills', '.pill', '.tick', '.fact', '.tool',
+      '.hero-tag', '.scroll-cue', '.hero-scroll-hint',
+      '.deck-title', '.counter', '.hint', '.meta-row', '.open', '.tag',
+      '.slide:not(.active)'   // restoration deck: only read the visible slide
+    ].join(',');
+    return Array.from(document.querySelectorAll(SEL))
+      .filter(el => !el.closest(SKIP))
+      .filter(el => {
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0.05;
+      })
+      .map(el => el.textContent.replace(/\s+/g, ' ').trim())
+      .filter(t => t && t.length > 1);
+  }
+
+  function startKeepalive() {
+    stopKeepalive();
+    // Chrome cuts speech off after ~15s; pause+resume restarts the clock
+    keepalive = setInterval(() => {
+      if (active && !synth.paused && synth.speaking) {
+        synth.pause(); synth.resume();
+      }
+    }, 10000);
+  }
+  function stopKeepalive() { if (keepalive) clearInterval(keepalive); keepalive = null; }
+
+  function speakNext() {
+    if (!active) return;
+    if (chunkIdx >= chunks.length) {
+      active = false; updateUI();
+      stopKeepalive();
+      setStatus('✓ Done.', 'ok');
+      return;
+    }
+    setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    const u = new SpeechSynthesisUtterance(chunks[chunkIdx]);
+    const v = voices[+voiceSel.value];
+    if (v) u.voice = v;
+    u.rate  = parseFloat(rateInp.value) || 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    u.onend = () => { chunkIdx++; speakNext(); };
+    u.onerror = (e) => {
+      console.warn('[narr] utterance error', e);
+      chunkIdx++; speakNext();
+    };
+    try {
+      synth.speak(u);
+    } catch (err) {
+      console.error('[narr] speak threw', err);
+      setStatus('Speak failed: ' + err.message, 'err');
+      active = false; updateUI(); stopKeepalive();
+    }
+  }
+
+  function play() {
+    // pick text first
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().trim().length > 4) {
+      chunks = sel.toString().split(/(?<=[.!?])\s+/).filter(Boolean);
+    } else {
+      chunks = gatherText();
+    }
+    if (!chunks.length) { setStatus('No readable text found.', 'err'); return; }
+
+    // make sure voices have a chance to load
+    if (voices.length === 0) loadVoices();
+
+    if (synth.speaking || synth.pending) synth.cancel();
+
+    chunkIdx = 0;
+    active = true;
+    updateUI();
+    startKeepalive();
+    setStatus(`Loading ${chunks.length} segments…`);
+
+    // Chrome: small delay after cancel prevents the new speak() from getting eaten
+    setTimeout(() => {
+      if (!active) return;
+      // If voices STILL aren't loaded, speak with default voice (synth uses system default)
+      speakNext();
+    }, 80);
+  }
+
+  function togglePause() {
+    if (!active) return;
+    if (synth.speaking && !synth.paused) {
+      synth.pause(); setStatus('Paused.');
+    } else if (synth.paused) {
+      synth.resume(); setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    }
+  }
+
+  function stop() {
+    synth.cancel();
+    active = false;
+    stopKeepalive();
+    updateUI();
+    setStatus('Stopped.');
+  }
+
+  function updateUI() {
+    fab.classList.toggle('narrating', active);
+    fab.textContent = active ? '🔊' : '🎧';
+  }
+
+  fab.addEventListener('click', () => panel.classList.toggle('show'));
+  $('narrClose').onclick = () => panel.classList.remove('show');
+  $('narrPlay').onclick  = play;
+  $('narrPause').onclick = togglePause;
+  $('narrStop').onclick  = stop;
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('show')) panel.classList.remove('show');
+  });
+  window.addEventListener('beforeunload', () => synth.cancel());
+})();
+</script>
+</body>
+</html>

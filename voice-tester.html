@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Voice Tester · Pick the most natural one</title>
+<style>
+  :root {
+    --ink:    #f4fbff;
+    --muted:  #b9d6ea;
+    --accent: #6ee7ff;
+    --warm:   #ffd166;
+    --good:   #7dffb1;
+    --bad:    #ff6b8a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: linear-gradient(180deg, #021024 0%, #052a52 100%);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+  main { max-width: 920px; margin: 0 auto; padding: 50px 6vw 80px; }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900; letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #6ee7ff, #ffe9a8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 720px;
+    margin: 0 0 26px;
+  }
+  .status-row {
+    display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 22px;
+  }
+  .status-pill {
+    display: inline-flex; gap: 8px; align-items: center;
+    padding: 6px 12px;
+    background: rgba(2,16,36,0.6);
+    border: 1px solid rgba(110,231,255,0.3);
+    border-radius: 999px;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bad); }
+  .status-pill.ok .dot { background: var(--good); box-shadow: 0 0 10px var(--good); }
+  .status-pill.ok { color: var(--good); border-color: rgba(125,255,177,0.4); }
+
+  .controls {
+    background: rgba(2,16,36,0.5);
+    border: 1px solid rgba(110,231,255,0.25);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 26px;
+  }
+  .controls label {
+    display: block;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--accent); font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .controls textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px; line-height: 1.5;
+    font-family: inherit;
+    min-height: 90px;
+    resize: vertical;
+  }
+  .controls .row {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .controls .row label { color: var(--muted); font-weight: 600; margin: 0; }
+  .controls input[type=range] {
+    flex: 1; min-width: 160px;
+  }
+  .controls .speed-num {
+    color: var(--accent);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    min-width: 56px; text-align: right;
+  }
+
+  .voice-list {
+    display: grid;
+    gap: 10px;
+  }
+  .voice {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    background: rgba(2,16,36,0.55);
+    border: 1px solid rgba(110,231,255,0.18);
+    border-radius: 12px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .voice:hover { border-color: rgba(110,231,255,0.5); background: rgba(110,231,255,0.06); }
+  .voice.playing {
+    border-color: var(--warm);
+    background: rgba(255,209,102,0.08);
+    box-shadow: 0 0 0 2px rgba(255,209,102,0.25);
+  }
+  .voice.favorite {
+    border-color: var(--good);
+    background: rgba(125,255,177,0.06);
+  }
+  .voice .info { min-width: 0; }
+  .voice .name {
+    font-weight: 800; font-size: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .voice .name .gender {
+    display: inline-block;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px;
+    background: rgba(110,231,255,0.15);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .voice .name .gender.male {
+    background: rgba(125,255,177,0.15);
+    color: var(--good);
+  }
+  .voice .desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .voice .id {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+    font-family: ui-monospace, Menlo, monospace;
+    letter-spacing: 0;
+  }
+
+  .voice button {
+    border: 1px solid rgba(110,231,255,0.4);
+    background: rgba(110,231,255,0.10);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .voice button:hover { background: rgba(110,231,255,0.22); }
+  .voice button.fav {
+    width: 38px; padding: 0; height: 38px;
+    background: transparent; font-size: 18px;
+  }
+  .voice.favorite .fav { color: var(--good); border-color: var(--good); }
+
+  .pick-bar {
+    position: sticky; bottom: 0;
+    margin: 30px -6vw 0;
+    padding: 16px 6vw;
+    background: linear-gradient(0deg, rgba(2,16,36,0.95), rgba(2,16,36,0.7));
+    border-top: 1px solid rgba(110,231,255,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .pick-bar .selected {
+    color: var(--muted); font-size: 13px;
+  }
+  .pick-bar .selected b { color: var(--good); }
+  .pick-bar button {
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    border: 0; color: #022;
+    border-radius: 999px;
+    font-weight: 800; font-size: 13px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(110,231,255,0.3);
+  }
+  .pick-bar button:hover { transform: translateY(-2px); }
+  .pick-bar button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .footer-link { display: block; text-align: center; margin-top: 18px; color: var(--muted); font-size: 12px; }
+  .footer-link a { color: var(--accent); }
+
+  .err {
+    padding: 14px;
+    background: rgba(255,107,138,0.10);
+    border: 1px solid var(--bad);
+    border-radius: 10px;
+    color: #ffd0d6;
+    font-size: 13px;
+    margin: 16px 0;
+    display: none;
+  }
+  .err.show { display: block; }
+</style>
+</head>
+<body>
+
+<main>
+  <h1>Pick a voice that sounds <em>actually human</em>.</h1>
+  <p class="lede">
+    Click ▶ next to each voice to play the sample. Star the one you like best.
+    The chosen voice will be saved as the default for the rest of the project.
+  </p>
+
+  <div class="status-row">
+    <div class="status-pill" id="serverPill"><span class="dot"></span> Server: checking…</div>
+    <div class="status-pill" id="voicePill"><span class="dot"></span> Voices: —</div>
+    <div class="status-pill" id="cachePill"><span class="dot"></span> Cache: —</div>
+  </div>
+
+  <div class="err" id="err"></div>
+
+  <div class="controls">
+    <label for="sampleText">Sample text</label>
+    <textarea id="sampleText">In one drop of seawater there are roughly one million bacteria. Phytoplankton produce about half of Earth's oxygen. The blue whale's heart is the size of a small car — and it eats four tons of krill a day.</textarea>
+    <div class="row">
+      <label for="rate">Speed</label>
+      <input type="range" id="rate" min="-50" max="50" step="5" value="0"/>
+      <span class="speed-num" id="rateLbl">+0%</span>
+    </div>
+  </div>
+
+  <div class="voice-list" id="voiceList"></div>
+
+  <div class="pick-bar">
+    <div class="selected" id="selectedLbl">No favorite chosen yet — star one above.</div>
+    <button id="useThis" disabled>Use this voice across project</button>
+  </div>
+
+  <a class="footer-link" href="index.html">← back to project hub</a>
+</main>
+
+<audio id="player" preload="none"></audio>
+
+<script>
+const API = "http://127.0.0.1:9200";
+const LS_KEY = "fia-tts-favorite-voice";
+
+const $ = id => document.getElementById(id);
+const serverPill = $("serverPill");
+const voicePill  = $("voicePill");
+const cachePill  = $("cachePill");
+const errBox     = $("err");
+const list       = $("voiceList");
+const player     = $("player");
+const useBtn     = $("useThis");
+const selLbl     = $("selectedLbl");
+const rateInp    = $("rate");
+const rateLbl    = $("rateLbl");
+
+let voices = [];
+let favorite = localStorage.getItem(LS_KEY) || "";
+let nowPlayingId = null;
+
+const cache = {};   // voiceId → blob URL
+let cacheCount = 0;
+
+function setPill(el, ok, label) {
+  el.classList.toggle("ok", !!ok);
+  el.innerHTML = `<span class="dot"></span> ${label}`;
+}
+function showErr(msg) { errBox.textContent = msg; errBox.classList.add("show"); }
+function clearErr() { errBox.classList.remove("show"); errBox.textContent = ""; }
+
+async function checkServer() {
+  try {
+    const r = await fetch(`${API}/healthz`, { cache: "no-store" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    setPill(serverPill, true, "Server: live");
+    return true;
+  } catch (e) {
+    setPill(serverPill, false, "Server: offline");
+    showErr(`Cannot reach the TTS service at ${API}. Is it running?\n` +
+            `Start it with: cd ~/Library/Fia-TTS && ./venv/bin/python server.py`);
+    return false;
+  }
+}
+
+async function loadVoices() {
+  try {
+    const r = await fetch(`${API}/voices`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    voices = await r.json();
+    setPill(voicePill, true, `Voices: ${voices.length}`);
+    renderList();
+  } catch (e) {
+    setPill(voicePill, false, "Voices: failed");
+    showErr("Could not load voice list: " + e.message);
+  }
+}
+
+function renderList() {
+  list.innerHTML = "";
+  voices.forEach(v => {
+    const row = document.createElement("div");
+    row.className = "voice";
+    row.dataset.id = v.id;
+    if (favorite === v.id) row.classList.add("favorite");
+    row.innerHTML = `
+      <div class="info">
+        <div class="name">${v.name}
+          <span class="gender ${v.gender}">${v.gender}</span>
+        </div>
+        <div class="desc">${v.desc}</div>
+        <div class="id">${v.id}</div>
+      </div>
+      <button class="play" data-id="${v.id}">▶ Play</button>
+      <button class="fav" data-id="${v.id}" title="Set as favorite">★</button>
+    `;
+    list.appendChild(row);
+  });
+  updateSelectedLbl();
+}
+
+function updateSelectedLbl() {
+  if (favorite) {
+    const v = voices.find(x => x.id === favorite);
+    selLbl.innerHTML = v ? `Favorite: <b>${v.name}</b> &nbsp;<span style="opacity:0.6;font-family:ui-monospace,monospace;font-size:11px;">(${v.id})</span>` : "";
+    useBtn.disabled = false;
+  } else {
+    selLbl.textContent = "No favorite chosen yet — star one above.";
+    useBtn.disabled = true;
+  }
+}
+
+async function fetchVoiceSample(voiceId) {
+  const text = $("sampleText").value.trim();
+  const rate = (parseInt(rateInp.value, 10) || 0);
+  const cacheKey = `${voiceId}|${text}|${rate}`;
+  if (cache[cacheKey]) return cache[cacheKey];
+  setPill(cachePill, true, `Cache: ${cacheCount} loaded · synthesizing…`);
+  const r = await fetch(`${API}/tts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      text,
+      voice: voiceId,
+      rate: (rate >= 0 ? "+" : "") + rate + "%"
+    })
+  });
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${r.status}`);
+  }
+  const blob = await r.blob();
+  const url = URL.createObjectURL(blob);
+  cache[cacheKey] = url;
+  cacheCount++;
+  setPill(cachePill, true, `Cache: ${cacheCount} loaded`);
+  return url;
+}
+
+async function play(voiceId) {
+  clearErr();
+  // mark UI playing
+  document.querySelectorAll(".voice.playing").forEach(el => el.classList.remove("playing"));
+  const row = document.querySelector(`.voice[data-id="${CSS.escape(voiceId)}"]`);
+  if (row) row.classList.add("playing");
+  nowPlayingId = voiceId;
+  try {
+    const url = await fetchVoiceSample(voiceId);
+    player.src = url;
+    await player.play();
+  } catch (e) {
+    showErr("Playback failed: " + e.message);
+    if (row) row.classList.remove("playing");
+    setPill(cachePill, false, "Cache: error");
+  }
+}
+
+list.addEventListener("click", e => {
+  const playBtn = e.target.closest(".play");
+  const favBtn = e.target.closest(".fav");
+  if (playBtn) play(playBtn.dataset.id);
+  if (favBtn) {
+    favorite = favBtn.dataset.id;
+    localStorage.setItem(LS_KEY, favorite);
+    document.querySelectorAll(".voice").forEach(el => el.classList.remove("favorite"));
+    e.target.closest(".voice").classList.add("favorite");
+    updateSelectedLbl();
+  }
+});
+
+player.addEventListener("ended", () => {
+  document.querySelectorAll(".voice.playing").forEach(el => el.classList.remove("playing"));
+  nowPlayingId = null;
+});
+
+rateInp.addEventListener("input", () => {
+  const v = parseInt(rateInp.value, 10) || 0;
+  rateLbl.textContent = (v >= 0 ? "+" : "") + v + "%";
+  // wipe cache when speed changes (different audio)
+  Object.keys(cache).forEach(k => URL.revokeObjectURL(cache[k]));
+  for (const k in cache) delete cache[k];
+  cacheCount = 0;
+  setPill(cachePill, true, "Cache: 0 (speed changed)");
+});
+
+useBtn.addEventListener("click", () => {
+  if (!favorite) return;
+  alert(
+    `Saved your favorite voice locally:\n\n` +
+    `  ${favorite}\n\n` +
+    `Tell Claude "use ${favorite} as the project narrator" and it'll wire it ` +
+    `into all four feature pages.`
+  );
+});
+
+// boot
+(async () => {
+  if (await checkServer()) {
+    await loadVoices();
+  }
+})();
+</script>
+</body>
+</html>

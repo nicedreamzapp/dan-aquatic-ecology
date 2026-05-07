@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aquatic Restoration Ecology — A Thesis-Quality Slide Tour</title>
+<style>
+  :root {
+    --ink: #f6fbff;
+    --muted: #b9d6ea;
+    --accent: #6ee7ff;
+    --warn: #ffd166;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #000;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    overflow: hidden;
+  }
+
+  .deck {
+    position: fixed; inset: 0;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transition: opacity 700ms ease;
+    pointer-events: none;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2;
+  }
+
+  /* Ken Burns slow zoom on the active slide */
+  .slide.active .bg {
+    animation: kenburns 22s ease-out forwards;
+  }
+  .bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.05);
+    will-change: transform;
+  }
+  @keyframes kenburns {
+    from { transform: scale(1.05) translate(0, 0); }
+    to   { transform: scale(1.18) translate(-1.5%, -1.5%); }
+  }
+
+  .scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.85) 100%),
+      linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.0) 55%);
+  }
+
+  .content {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 6vh 7vw 110px;        /* extra bottom space so .figures clears the .ctrls bar */
+    max-width: min(1100px, 92vw);  /* keeps body off the right-edge attribution + hint */
+  }
+  .eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    opacity: 0.95;
+  }
+  .title {
+    font-size: clamp(32px, 5.4vw, 64px);
+    line-height: 1.05;
+    margin: 0 0 14px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.55);
+  }
+  .subtitle {
+    font-size: clamp(16px, 1.8vw, 22px);
+    line-height: 1.45;
+    max-width: 900px;
+    color: var(--ink);
+    text-shadow: 0 1px 8px rgba(0,0,0,0.55);
+    margin: 0 0 18px;
+  }
+  .body {
+    font-size: clamp(13px, 1.15vw, 16px);
+    line-height: 1.6;
+    max-width: 880px;
+    color: var(--muted);
+  }
+  .body p { margin: 0 0 9px; }
+  .body strong { color: #fff; }
+  .body em { color: var(--accent); font-style: normal; }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 16px 0 4px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(110,231,255,0.12);
+    border: 1px solid rgba(110,231,255,0.35);
+    border-radius: 999px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .figures {
+    display: flex;
+    gap: 14px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 10px;
+    padding: 8px 12px;
+    min-width: 120px;
+  }
+  .stat .num {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat .lbl {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* attribution / source — moved to top-right so it never collides with stats or the ctrls bar */
+  .attrib {
+    position: absolute;
+    top: 50px; right: 18px;
+    max-width: 38vw;
+    text-align: right;
+    font-size: 10px;
+    color: rgba(255,255,255,0.55);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7);
+    z-index: 4;
+    letter-spacing: 0.5px;
+  }
+  .attrib a { color: inherit; text-decoration: underline; opacity: 0.7; }
+
+  /* HUD: progress, counter, controls */
+  .hud {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    pointer-events: none;
+  }
+  .deck-title {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .deck-title b { color: var(--accent); }
+  .counter {
+    pointer-events: auto;
+    font-size: 12px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--ink);
+    padding: 5px 10px;
+    border-radius: 999px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    z-index: 11;
+  }
+  .progress > .bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #ffffff);
+    transition: width 500ms ease;
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* on-screen controls */
+  .ctrls {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+  }
+  .btn {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 200ms, transform 200ms;
+  }
+  .btn:hover { background: rgba(110,231,255,0.18); transform: translateY(-1px); }
+  .btn.icon { padding: 10px 12px; }
+
+  /* edge click zones */
+  .zone {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 25%;
+    z-index: 5;
+    cursor: pointer;
+  }
+  .zone.left  { left: 0; }
+  .zone.right { right: 0; }
+
+  /* keyboard hint — hidden to prevent overlap with body text on long slides;
+     keyboard shortcuts are still active and shown in button title attributes */
+  .hint { display: none; }
+  .hint kbd {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    color: var(--ink);
+  }
+
+  .home-link {
+    position: fixed;
+    top: 14px; left: 20px;
+    z-index: 12;
+    color: var(--accent);
+    font-size: 12px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .home-link:hover { opacity: 1; }
+
+  @media (max-width: 700px) {
+    .content { padding: 5vh 6vw 12vh; }
+    .hint { display: none; }
+    .deck-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<a class="home-link" href="dan-aquatic-ecology.html">← back to ecology overview</a>
+
+<div class="hud">
+  <div class="deck-title"><b>Aquatic Restoration Ecology</b> · A thesis-grade slide tour</div>
+  <div class="counter"><span id="curr">1</span> / <span id="total">1</span></div>
+</div>
+
+<div class="hint">
+  <kbd>→</kbd> next &nbsp; <kbd>←</kbd> prev<br/>
+  <kbd>F</kbd> fullscreen &nbsp; <kbd>P</kbd> auto-play<br/>
+  <kbd>Home</kbd> first &nbsp; <kbd>End</kbd> last
+</div>
+
+<div class="zone left"  id="zoneLeft"></div>
+<div class="zone right" id="zoneRight"></div>
+
+<div class="deck" id="deck"></div>
+
+<div class="ctrls">
+  <button class="btn icon" id="prev" title="Previous (←)">◀</button>
+  <button class="btn" id="play" title="Toggle auto-play (P)">▶ Auto-play</button>
+  <button class="btn icon" id="fs" title="Fullscreen (F)">⛶</button>
+  <button class="btn icon" id="next" title="Next (→)">▶</button>
+</div>
+
+<script>
+const SLIDES = [
+  {
+    eyebrow: "INTRODUCTION",
+    title: "Aquatic Restoration Ecology",
+    subtitle: "Returning function, structure, and resilience to degraded freshwater and marine ecosystems.",
+    body: `
+      <p><strong>Restoration ecology</strong> is the science — and art — of assisting the recovery of ecosystems
+      that have been degraded, damaged, or destroyed. In aquatic systems, that means rebuilding the
+      <em>physical structure, hydrology, biogeochemistry, and biological communities</em> of waterbodies so they once
+      again deliver the ecosystem services humans and wildlife depend on.</p>
+      <p>This deck walks through the leading aquatic restoration practices in use today — from coral reefs to
+      kelp forests to inland streams — at a level appropriate for graduate ecological coursework. Use <kbd>→</kbd>
+      to advance.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/ISS-45_StoryOfWater%2C_Great_Barrier_Reef%2C_Australia.jpg",
+    attrib: "Great Barrier Reef from the ISS · NASA / Wikimedia Commons (public domain)",
+    pills: ["Graduate level", "Aquatic only", "Practitioner-oriented"]
+  },
+  {
+    eyebrow: "FRAMEWORK",
+    title: "What we mean by 'restoration'",
+    subtitle: "Five overlapping intervention intensities, after the SER International Standards (2nd ed., 2019).",
+    body: `
+      <p>The Society for Ecological Restoration distinguishes a continuum of recovery actions:
+      <strong>(1) reduced impact</strong>, <strong>(2) remediation</strong>, <strong>(3) rehabilitation</strong>,
+      <strong>(4) ecological restoration</strong>, and <strong>(5) ecosystem creation</strong>. Aquatic projects rarely
+      land in only one category — most combine pollution abatement, hydrologic reconnection, and active
+      reintroduction of foundation species.</p>
+      <p>The <em>reference ecosystem</em> — historical or analogous — anchors goals. Recovery is evaluated against
+      six ecosystem attributes: species composition, community structure, abiotic conditions, ecosystem
+      processes, external exchanges, and absence of threats.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Karimunjawa_shallow_reef.jpg",
+    attrib: "Karimunjawa shallow reef · Wikimedia Commons",
+    pills: ["SER Standards", "Reference ecosystem", "6-attribute evaluation"]
+  },
+  {
+    eyebrow: "MARINE · CORAL",
+    title: "Coral reef restoration",
+    subtitle: "Out-planting fragmented corals to rebuild the reefs that house ~25% of marine species.",
+    body: `
+      <p>Anthropogenic stressors — thermal stress, ocean acidification, nutrient loading, dynamite fishing —
+      have driven a global decline in live coral cover of roughly <strong>50% since 1957</strong> (Eddy et al. 2021).
+      Active restoration relies on <em>asexual fragmentation</em> of fast-growing branching corals (especially
+      <em>Acropora</em>), nursery rearing on tree or table structures, and out-planting onto consolidated substrate.</p>
+      <p>Newer methods include <strong>microfragmentation</strong> for slow-growing massive corals, <strong>assisted
+      gene flow</strong> using thermally tolerant genets, larval seeding via <em>in situ</em> spawn collection, and
+      3D-printed reef modules. Success is measured in coral cover, recruit density, fish biomass, and <em>structural
+      complexity</em> (rugosity).</p>
+    `,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Acropora_pulchra.jpg",
+    attrib: "Acropora pulchra · Wikimedia Commons",
+    pills: ["Microfragmentation", "Assisted gene flow", "Larval seeding"],
+    stats: [
+      { num: "~50%", lbl: "global live coral lost since 1957" },
+      { num: "25%",  lbl: "of marine species reef-dependent" },
+      { num: "1.4 cm/yr", lbl: "Acropora linear extension" }
+    ]
+  },
+  {
+    eyebrow: "COASTAL · MANGROVE",
+    title: "Mangrove restoration",
+    subtitle: "Re-establishing the salt-tolerant forest that armors tropical coastlines.",
+    body: `
+      <p>Mangroves provide outsized ecosystem services per hectare: <strong>storm surge attenuation</strong>,
+      sediment trapping, fish nursery habitat, and exceptional <em>blue carbon</em> sequestration — they store
+      3–5× more carbon per hectare than tropical upland forests. Yet ~35% of global mangrove area was lost in
+      the late 20th century to aquaculture, urban expansion, and altered hydrology.</p>
+      <p>Best-practice restoration is <strong>Ecological Mangrove Restoration (EMR)</strong>: rather than mass
+      seedling planting, practitioners diagnose hydrologic blockages, restore tidal flushing, and let natural
+      propagule recruitment do the work. Where planting is needed, species selection must match the
+      <em>local elevation–inundation envelope</em> (e.g., <em>Rhizophora</em> seaward, <em>Avicennia</em> mid-zone,
+      <em>Bruguiera</em> landward).</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Plantation_de_pal%C3%A9tuviers.jpg",
+    attrib: "Mangrove plantation · Wikimedia Commons",
+    pills: ["Blue carbon", "EMR (Lewis 2005)", "Hydrology-first"],
+    stats: [
+      { num: "3–5×", lbl: "carbon vs upland tropical forest" },
+      { num: "35%",  lbl: "global mangrove area lost (20th c.)" },
+      { num: "$194B/yr", lbl: "estimated coastal protection value" }
+    ]
+  },
+  {
+    eyebrow: "ESTUARINE · BIVALVE",
+    title: "Oyster reef restoration",
+    subtitle: "Rebuilding the 'living filters' that engineer estuarine water quality.",
+    body: `
+      <p>Eastern oyster (<em>Crassostrea virginica</em>) and Olympia oyster (<em>Ostrea lurida</em>) reefs are
+      <strong>ecosystem engineers</strong> — they create three-dimensional habitat, filter 1.5–10 gallons of water
+      per individual per day, and stabilize shorelines. Historic populations in Chesapeake Bay are estimated at
+      <strong>&lt; 1% of pre-colonial biomass</strong> due to overharvest, sedimentation, and disease (MSX, Dermo).</p>
+      <p>Modern restoration deploys <strong>cultch</strong> (recycled shell, limestone, or concrete) as settlement
+      substrate, seeded with hatchery-spawned spat. Targets emphasize <em>reef vertical relief, density,
+      and self-sustaining recruitment</em>, not just acreage. The 2014 Chesapeake Bay Watershed Agreement set a
+      goal of restoring oyster populations in 10 tributaries by 2025.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Sanbanze_kakisyo_nekozane.jpg",
+    attrib: "Oyster bed · Wikimedia Commons",
+    pills: ["Crassostrea virginica", "Cultch + spat", "Filtration services"],
+    stats: [
+      { num: "<1%",   lbl: "of historic Chesapeake oyster biomass" },
+      { num: "50 gal/day", lbl: "filtration per adult oyster (max)" },
+      { num: "10",    lbl: "Chesapeake tributaries targeted by 2025" }
+    ]
+  },
+  {
+    eyebrow: "MARINE · MEADOWS",
+    title: "Seagrass restoration",
+    subtitle: "Planting the underwater meadows that anchor the coastal carbon cycle.",
+    body: `
+      <p>Seagrass meadows (e.g., <em>Zostera marina</em>, <em>Posidonia oceanica</em>, <em>Thalassia testudinum</em>)
+      are the only flowering plants adapted to fully marine life. They sequester organic carbon in sediments
+      at rates per hectare comparable to mangroves and provide critical nursery habitat for commercial fisheries.
+      Global loss is conservatively estimated at <strong>29% since 1879</strong>, with a doubling of decline
+      rates after 1980.</p>
+      <p>Restoration techniques include <strong>seed broadcasting</strong> (the 17-year Virginia Coast Reserve
+      project remains the largest successful seagrass restoration on record, with &gt; 9,000 acres recovered),
+      <strong>shoot transplantation</strong> using hand-anchored bare-root or burlap-disc methods, and
+      <em>donor-meadow harvest minimization</em>. Light availability — driven by water clarity — is almost
+      always the limiting factor.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Zostera_marina_-_National_Museum_of_Nature_and_Science%2C_Tokyo_-_DSC07663.JPG",
+    attrib: "Zostera marina · Wikimedia Commons",
+    pills: ["Seed broadcast", "Light-limited", "Blue carbon"],
+    stats: [
+      { num: "29%",  lbl: "global seagrass loss since 1879" },
+      { num: "9,000+", lbl: "acres restored, Virginia Coast Reserve" },
+      { num: "≥10%", lbl: "minimum surface light required" }
+    ]
+  },
+  {
+    eyebrow: "COASTAL · WETLAND",
+    title: "Salt marsh restoration",
+    subtitle: "Reconnecting tides, rebuilding sediment supply, and re-vegetating the high-intertidal zone.",
+    body: `
+      <p>Salt marshes — dominated by <em>Spartina alterniflora</em> on US Atlantic coasts and
+      <em>Sporobolus</em>/<em>Salicornia</em> communities elsewhere — buffer wave energy, accrete vertically with
+      sea level rise, and rank among the most biologically productive ecosystems on Earth (NPP &gt; 1,500 g C m⁻²
+      yr⁻¹). They are simultaneously among the most diked, ditched, and drained.</p>
+      <p>Common interventions include <strong>tidal reconnection</strong> (removing or upgrading restrictive
+      culverts, breaching dikes), <strong>thin-layer sediment placement</strong> (TLP) to combat drowning under
+      accelerating sea-level rise, <strong>ditch remediation</strong> (runneling, ditch plugging), and
+      <em>Spartina</em> plug planting. Long-term success requires elevation that keeps pace with relative sea
+      level rise — the central restoration challenge of the coming century.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Tidal_salt_marsh_at_Ella_Nore_-_geograph.org.uk_-_1368134.jpg",
+    attrib: "Tidal salt marsh, Ella Nore · Wikimedia Commons (CC-BY-SA)",
+    pills: ["Tidal reconnection", "Thin-layer placement", "SLR adaptation"],
+    stats: [
+      { num: "1,500+", lbl: "g C m⁻² yr⁻¹ NPP" },
+      { num: "25–50%", lbl: "global salt marsh lost" },
+      { num: "3–10 mm/yr", lbl: "accretion needed under SLR" }
+    ]
+  },
+  {
+    eyebrow: "MARINE · ALGAL FOREST",
+    title: "Kelp forest restoration",
+    subtitle: "Reining in urchin barrens and re-seeding the temperate coastal canopy.",
+    body: `
+      <p>Giant kelp (<em>Macrocystis pyrifera</em>), bull kelp (<em>Nereocystis luetkeana</em>), and their
+      relatives form some of the most biologically diverse and productive marine systems known. Loss of
+      apex predators (sea otters, sunflower sea stars) plus marine heatwaves have triggered phase shifts to
+      <strong>urchin barrens</strong> across the California Current, Tasmania, and Atlantic Canada — northern
+      California lost &gt; 95% of its bull kelp canopy after 2014.</p>
+      <p>Restoration toolkits include <strong>urchin culling</strong> via diver removal or fishery development
+      (e.g., <em>Mendocino Sea Urchin Commission</em> efforts), <strong>green gravel</strong> (juvenile sporophytes
+      grown on small stones, then dropped), and <strong>predator recovery</strong> (sea-otter range expansion,
+      sunflower-star captive breeding). The trophic cascade dimension makes kelp restoration unusually dependent
+      on community-level management.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/67/Kelp_forest.jpg",
+    attrib: "Kelp forest · Wikimedia Commons",
+    pills: ["Trophic cascade", "Green gravel", "Urchin barrens"],
+    stats: [
+      { num: ">95%",  lbl: "N. CA bull kelp loss since 2014" },
+      { num: "60 cm/day", lbl: "max Macrocystis growth" },
+      { num: "1000+", lbl: "species supported per kelp forest" }
+    ]
+  },
+  {
+    eyebrow: "FRESHWATER · LOTIC",
+    title: "Stream & river restoration",
+    subtitle: "Re-meandering, re-wooding, and re-floodplaining channelized rivers.",
+    body: `
+      <p>A century of channelization, riprap, and floodplain disconnection has left most temperate-zone rivers
+      structurally simplified and biologically impoverished. Restoration practice has shifted from the
+      single-thread <em>Natural Channel Design</em> approach (Rosgen, 1996) toward <strong>process-based
+      restoration</strong> — restoring the disturbance regimes (flooding, sediment transport, large wood
+      recruitment) that build and maintain habitat on their own.</p>
+      <p>Common techniques: <strong>large wood reintroduction</strong> (engineered log jams, beaver-dam
+      analogs), <strong>levee setbacks</strong>, <strong>two-stage ditches</strong>, riparian re-vegetation, and
+      <em>Stage 0</em> valley-floor re-set, which deliberately fills incised channels and lets a new
+      anastomosing network form. Monitoring uses BACI designs and tracks geomorphology, macroinvertebrates
+      (EPT richness), and salmonid life-stage capacity.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Robinson_Creek_before.jpg",
+    attrib: "Robinson Creek · Wikimedia Commons",
+    pills: ["Process-based", "Engineered log jams", "Stage 0"],
+    stats: [
+      { num: "1M+",  lbl: "stream miles altered in US" },
+      { num: "$1B+/yr", lbl: "US stream restoration spend" },
+      { num: "BACI", lbl: "preferred monitoring design" }
+    ]
+  },
+  {
+    eyebrow: "FRESHWATER · CONNECTIVITY",
+    title: "Dam removal",
+    subtitle: "The fastest-growing class of US river restoration — over 2,000 dams removed since 1912.",
+    body: `
+      <p>Aging, low-economic-value, and ecologically harmful dams are being removed at an accelerating rate.
+      The 2023–24 removal of four mainstem dams on the <strong>Klamath River</strong> reopened ~400 river miles
+      to anadromous fish — the largest dam removal in world history. Comparable projects: Elwha (2011–14),
+      Penobscot (2012–13), and Edwards (1999).</p>
+      <p>Ecological responses are typically <em>fast and dramatic</em>: native fish recolonize within 1–3
+      seasons, sediment pulses reshape downstream habitat over 1–10 years, and riparian succession proceeds on
+      newly exposed reservoir footprints. Key planning considerations include legacy contaminant
+      management, downstream sediment slugs, and replacement of any genuine flood/water-supply services. A
+      thoughtful removal is itself a restoration design problem — not just a demolition.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Dam_removal.jpg",
+    attrib: "Dam removal · Wikimedia Commons",
+    pills: ["Klamath 2024", "Sediment management", "Anadromy"],
+    stats: [
+      { num: "2,000+", lbl: "US dams removed (1912–2024)" },
+      { num: "400 mi", lbl: "Klamath habitat reopened" },
+      { num: "1–3 yr", lbl: "typical fish recolonization" }
+    ]
+  },
+  {
+    eyebrow: "FRESHWATER · CONNECTIVITY",
+    title: "Fish passage & ladders",
+    subtitle: "Where dams must remain, engineered passage restores migratory connectivity.",
+    body: `
+      <p>For dams that cannot be removed, <strong>fish ladders</strong>, <strong>nature-like fishways</strong>,
+      <strong>vertical-slot passes</strong>, and <strong>trap-and-haul</strong> programs reconnect spawning and
+      rearing habitat for salmon, shad, alewife, sturgeon, and eel. Design must match target species'
+      <em>swimming and leaping capacity</em>, jump height, attraction flow, and resting pool spacing — a Pacific
+      salmon ladder will fail an American eel and vice versa.</p>
+      <p>Modern practice prioritizes <strong>nature-like bypass channels</strong> over concrete pool-and-weir
+      designs because they support a wider species assemblage and provide habitat in their own right. Passage
+      <em>efficiency</em> (% of fish that find and ascend) and <em>delay</em> (hours/days lost) are the standard
+      monitoring metrics; both are typically quantified using PIT-tag arrays or radio telemetry.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/94/Bonneville_Ladder.jpg",
+    attrib: "Bonneville Dam fish ladder · Wikimedia Commons",
+    pills: ["PIT telemetry", "Nature-like fishway", "Multispecies design"],
+    stats: [
+      { num: ">85%", lbl: "target adult salmon passage efficiency" },
+      { num: "2 BL/s", lbl: "typical sustained swim speed" },
+      { num: "Δh ≤ 0.3m", lbl: "step head between pools" }
+    ]
+  },
+  {
+    eyebrow: "TRANSITIONAL · ESTUARINE",
+    title: "Estuary restoration",
+    subtitle: "Where rivers meet the sea — and most of our restoration leverage lives.",
+    body: `
+      <p>Estuaries are <strong>ecotones</strong> — transition zones with sharp salinity, temperature, and
+      sediment gradients that produce extraordinary biodiversity and primary productivity. They concentrate
+      anthropogenic pressure: ~40% of the global population lives within 100 km of a coast, and most major
+      cities sit on estuaries. Nitrogen loading, hypoxia, sediment starvation, and shoreline hardening are
+      the dominant stressors.</p>
+      <p>Restoration here is inherently <em>integrative</em>: it stitches together watershed nutrient
+      management (cover crops, riparian buffers, denitrifying wetlands), tidal-marsh reconnection,
+      seagrass and oyster work, and shoreline softening. The Chesapeake Bay Program, the San Francisco
+      Bay-Delta, and the Coastal Louisiana Master Plan are landmark multi-billion-dollar examples of estuary
+      restoration at landscape scale.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Rio_de_la_Plata_BA_2.JPG",
+    attrib: "Río de la Plata estuary · Wikimedia Commons",
+    pills: ["Nutrient management", "Ecotone", "Landscape scale"],
+    stats: [
+      { num: "40%",  lbl: "of humans within 100 km of coast" },
+      { num: "$50B+", lbl: "Coastal Louisiana Master Plan" },
+      { num: "N + P", lbl: "primary load drivers" }
+    ]
+  },
+  {
+    eyebrow: "GOVERNANCE · SPATIAL",
+    title: "Marine protected areas",
+    subtitle: "Setting aside the spatial conditions under which recovery becomes possible.",
+    body: `
+      <p>Active restoration alone cannot offset chronic extraction and disturbance. <strong>Marine Protected
+      Areas (MPAs)</strong> — particularly <em>fully protected</em> (no-take) zones — are the spatial
+      complement: they remove the press disturbance that prevents passive recovery from succeeding. As of
+      2024 ~8% of the global ocean is in some form of MPA but only ~3% is fully protected.</p>
+      <p>Meta-analyses (Lester et al. 2009; Sala &amp; Giakoumi 2017) show fully-protected MPAs roughly double
+      species richness and quadruple total fish biomass relative to unprotected sites. The frontier is
+      <strong>30×30</strong> — protecting 30% of land and ocean by 2030 (Convention on Biological Diversity,
+      Kunming-Montreal Framework, 2022) — and ensuring that <em>paper parks</em> are operationally enforced
+      rather than merely designated.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/ISS-45_StoryOfWater%2C_Great_Barrier_Reef%2C_Australia.jpg",
+    attrib: "Great Barrier Reef from the ISS · NASA",
+    pills: ["No-take zones", "30×30 target", "Paper parks problem"],
+    stats: [
+      { num: "8% / 3%", lbl: "ocean in MPAs / fully protected" },
+      { num: "4×",      lbl: "fish biomass in no-take zones" },
+      { num: "2030",    lbl: "30×30 deadline" }
+    ]
+  },
+  {
+    eyebrow: "SYNTHESIS",
+    title: "What good restoration looks like",
+    subtitle: "Six durable principles that survive across system types.",
+    body: `
+      <p><strong>1. Treat causes, not symptoms.</strong> Re-plant only after the driver of degradation
+      (pollution, hydrology, herbivory, fishing pressure) has been resolved.<br/>
+      <strong>2. Restore process before pattern.</strong> Tides, floods, sediment, fire, herbivory: get the
+      disturbances right and the structure largely follows.<br/>
+      <strong>3. Match propagules to provenance.</strong> Local genotypes outperform distant donor stock under
+      most conditions — but climate-adjusted provenancing is increasingly defensible.</p>
+      <p><strong>4. Plan for non-stationarity.</strong> Reference conditions are moving targets under climate
+      change. Aim at trajectories of resilience, not snapshots of the past.<br/>
+      <strong>5. Monitor with controls and time.</strong> BACI / BACIPS designs, ≥ 5-year horizons.<br/>
+      <strong>6. Restoration is socio-ecological.</strong> Tenure, livelihoods, and stewardship determine
+      whether ecology persists.</p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Karimunjawa_shallow_reef.jpg",
+    attrib: "Karimunjawa reef · Wikimedia Commons",
+    pills: ["Process > pattern", "Provenance", "Non-stationarity"]
+  },
+  {
+    eyebrow: "CLOSE",
+    title: "Thank you.",
+    subtitle: "Aquatic restoration ecology — built one watershed, one reef, one tide cycle at a time.",
+    body: `
+      <p>Selected references for further reading:</p>
+      <p>
+      • SER International. <em>International Standards for the Practice of Ecological Restoration</em>, 2nd ed., 2019.<br/>
+      • Lewis, R. R. (2005) <em>Ecological engineering for successful management and restoration of mangrove forests.</em><br/>
+      • Orth et al. (2020) <em>Restoration of seagrass habitat leads to rapid recovery of coastal ecosystem services.</em> Sci. Adv.<br/>
+      • Beechie et al. (2010) <em>Process-based principles for restoring river ecosystems.</em> BioScience.<br/>
+      • Lester et al. (2009) <em>Biological effects within no-take marine reserves: a global synthesis.</em> Mar. Ecol. Prog. Ser.<br/>
+      • Eddy et al. (2021) <em>Global decline in capacity of coral reefs to provide ecosystem services.</em> One Earth.</p>
+      <p style="margin-top:14px;color:var(--accent);"><strong>Press F for fullscreen, P to auto-play, ← back to ecology overview.</strong></p>`,
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/67/Kelp_forest.jpg",
+    attrib: "Kelp forest · Wikimedia Commons",
+    pills: ["References", "Q&A", "Acknowledgments"]
+  }
+];
+
+const deck = document.getElementById('deck');
+SLIDES.forEach((s, i) => {
+  const el = document.createElement('div');
+  el.className = 'slide';
+  el.dataset.idx = i;
+  const stats = (s.stats || []).map(st =>
+    `<div class="stat"><div class="num">${st.num}</div><div class="lbl">${st.lbl}</div></div>`
+  ).join('');
+  const pills = (s.pills || []).map(p => `<span class="pill">${p}</span>`).join('');
+  el.innerHTML = `
+    <div class="bg" style="background-image:url('${s.img}')"></div>
+    <div class="scrim"></div>
+    <div class="content">
+      <div class="eyebrow">${s.eyebrow}</div>
+      <h1 class="title">${s.title}</h1>
+      <div class="subtitle">${s.subtitle || ''}</div>
+      <div class="body">${s.body || ''}</div>
+      <div class="meta">${pills}</div>
+      ${stats ? `<div class="figures">${stats}</div>` : ''}
+    </div>
+    <div class="attrib">${s.attrib || ''}</div>
+  `;
+  deck.appendChild(el);
+});
+
+let curr = 0;
+const slides = [...document.querySelectorAll('.slide')];
+const total = slides.length;
+document.getElementById('total').textContent = total;
+const bar = document.getElementById('bar');
+const currLbl = document.getElementById('curr');
+
+function show(i) {
+  curr = (i + total) % total;
+  slides.forEach(s => s.classList.remove('active'));
+  slides[curr].classList.add('active');
+  // restart kenburns by toggling the active bg's animation
+  const bg = slides[curr].querySelector('.bg');
+  bg.style.animation = 'none';
+  bg.offsetHeight; // reflow
+  bg.style.animation = '';
+  currLbl.textContent = curr + 1;
+  bar.style.width = (((curr + 1) / total) * 100) + '%';
+}
+function next() { show(curr + 1); }
+function prev() { show(curr - 1); }
+
+document.getElementById('next').onclick = next;
+document.getElementById('prev').onclick = prev;
+document.getElementById('zoneRight').onclick = next;
+document.getElementById('zoneLeft').onclick = prev;
+
+// fullscreen
+const fsBtn = document.getElementById('fs');
+fsBtn.onclick = () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+};
+
+// auto-play
+let timer = null;
+const playBtn = document.getElementById('play');
+function setPlay(on) {
+  if (on) {
+    timer = setInterval(next, 10000);
+    playBtn.textContent = '❚❚ Pause';
+  } else {
+    clearInterval(timer); timer = null;
+    playBtn.textContent = '▶ Auto-play';
+  }
+}
+playBtn.onclick = () => setPlay(!timer);
+
+// keyboard
+document.addEventListener('keydown', e => {
+  switch (e.key) {
+    case 'ArrowRight': case ' ': case 'PageDown': next(); break;
+    case 'ArrowLeft': case 'PageUp':  prev(); break;
+    case 'Home': show(0); break;
+    case 'End':  show(total - 1); break;
+    case 'f': case 'F': fsBtn.click(); break;
+    case 'p': case 'P': playBtn.click(); break;
+  }
+});
+
+show(0);
+</script>
+<!-- ─────────────────── NARRATION (Web Speech API) ─────────────────── -->
+<style>
+  .narr-fab {
+    position: fixed; right: 16px; bottom: 16px;
+    z-index: 55;
+    width: 52px; height: 52px;
+    border: 0; border-radius: 50%;
+    background: linear-gradient(135deg, #6ee7ff 0%, #2a8fc9 100%);
+    color: #022; font-size: 22px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.15) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .narr-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 30px rgba(110,231,255,0.5); }
+  .narr-fab.narrating {
+    background: linear-gradient(135deg, #ffd166 0%, #ff8c3c 100%);
+    animation: narrPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes narrPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,209,102,0.4), 0 8px 24px rgba(0,0,0,0.5); }
+    50%     { box-shadow: 0 0 0 14px rgba(255,209,102,0), 0 8px 24px rgba(0,0,0,0.5); }
+  }
+  .narr-panel {
+    position: fixed; right: 16px; bottom: 80px;
+    z-index: 56; width: 320px;
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.4);
+    border-radius: 14px;
+    padding: 16px; color: #f4fbff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: none;
+  }
+  .narr-panel.show { display: block; animation: narrIn 0.2s ease; }
+  @keyframes narrIn { from { transform: translateY(8px); opacity: 0; } to { opacity: 1; } }
+  .narr-panel header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    color: #6ee7ff; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+  }
+  .narr-panel header button { background: none; border: 0; color: #b9d6ea; font-size: 16px; cursor: pointer; }
+  .narr-panel label { display: block; color: #b9d6ea; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin: 8px 0 4px; }
+  .narr-panel select, .narr-panel input[type=range] {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f4fbff; padding: 6px 8px; border-radius: 6px; font-size: 12px;
+  }
+  .narr-panel .row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .narr-panel .row button {
+    padding: 8px 10px;
+    border: 1px solid rgba(110,231,255,0.4);
+    background: rgba(110,231,255,0.10);
+    color: #f4fbff; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 12px;
+  }
+  .narr-panel .row button.primary {
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    color: #022; border-color: transparent;
+  }
+  .narr-panel .row button:hover { filter: brightness(1.1); }
+  .narr-panel .row button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .narr-panel .hint { margin-top: 10px; color: #9bd6ff; font-size: 10px; line-height: 1.4; }
+  .narr-panel .voice-warn { margin-top: 8px; color: #ffd166; font-size: 10px; line-height: 1.4; display: none; }
+  .narr-panel .voice-warn.show { display: block; }
+  .narr-panel .narr-status {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    font-size: 11px; color: #9bd6ff;
+    text-align: center; min-height: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .narr-panel .narr-status.err { color: #ffd166; }
+  .narr-panel .narr-status.ok  { color: #7dffb1; }
+</style>
+
+<button class="narr-fab" id="narrFab" title="Listen to this page" aria-label="Narrate page">🎧</button>
+<div class="narr-panel" id="narrPanel" role="dialog" aria-label="Narration controls">
+  <header><span>🔊 Narration</span><button id="narrClose" aria-label="Close">×</button></header>
+  <label for="narrVoice">Voice</label>
+  <select id="narrVoice"><option>Loading voices…</option></select>
+  <div class="voice-warn" id="narrWarn">
+    For Microsoft natural voices, open this page in <b>Microsoft Edge</b>.
+    On macOS without Edge, the best free voices are <b>Samantha</b>, <b>Ava</b>, or <b>Allison</b>.
+  </div>
+  <label for="narrRate">Speed (<span id="narrRateLbl">1.00×</span>)</label>
+  <input type="range" id="narrRate" min="0.7" max="1.5" step="0.05" value="1.0"/>
+  <div class="row">
+    <button class="primary" id="narrPlay">▶ Read page</button>
+    <button id="narrPause">⏸</button>
+    <button id="narrStop">⏹</button>
+  </div>
+  <div class="hint">Tip — highlight any text first, then press Read to hear just that.</div>
+  <div class="narr-status" id="narrStatus"></div>
+</div>
+
+<script>
+(() => {
+  if (!('speechSynthesis' in window)) { console.warn('[narr] speechSynthesis not supported'); return; }
+  const synth = window.speechSynthesis;
+
+  let voices = [];
+  let chunks = [];
+  let chunkIdx = 0;
+  let active = false;
+  let keepalive = null;
+
+  const $  = id => document.getElementById(id);
+  const voiceSel = $('narrVoice');
+  const rateInp  = $('narrRate');
+  const rateLbl  = $('narrRateLbl');
+  const fab      = $('narrFab');
+  const panel    = $('narrPanel');
+  const warn     = $('narrWarn');
+  const status   = $('narrStatus');
+
+  function setStatus(msg, kind) {
+    if (!status) return;
+    status.textContent = msg || '';
+    status.classList.remove('err', 'ok');
+    if (kind === 'err') status.classList.add('err');
+    if (kind === 'ok')  status.classList.add('ok');
+  }
+
+  function score(v) {
+    let s = 0;
+    if (/^en/i.test(v.lang)) s += 200;
+    if (/^en[-_]US/i.test(v.lang)) s += 30;
+    if (/(Natural|Neural|Online)/i.test(v.name)) s += 200;
+    if (/Microsoft/i.test(v.name)) s += 60;
+    if (/Aria|Jenny|Sonia|Emma|Michelle/i.test(v.name)) s += 80;
+    if (/Ava \(Premium\)|Samantha \(Premium\)|Allison \(Premium\)|Susan \(Premium\)/i.test(v.name)) s += 70;
+    if (/Ava|Samantha|Allison|Susan|Karen|Tessa|Moira|Fiona/i.test(v.name)) s += 35;
+    if (/Google.*US English/i.test(v.name)) s += 25;
+    if (/Daniel|Fred|Alex|Ralph|Bruce|Tom|Mark|Guy/i.test(v.name)) s -= 30;
+    if (v.default) s += 3;
+    return s;
+  }
+
+  function loadVoices() {
+    const all = synth.getVoices();
+    if (!all || all.length === 0) return false;
+    voices = all.slice().sort((a,b) => score(b) - score(a));
+    voiceSel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const tag = /(Natural|Neural|Online)/i.test(v.name) ? ' ✨'
+                : /Premium/i.test(v.name) ? ' ★' : '';
+      opt.textContent = `${v.name}${tag} · ${v.lang}`;
+      voiceSel.appendChild(opt);
+    });
+    warn.classList.toggle('show', !voices.some(v => /(Natural|Neural)/i.test(v.name)));
+    return true;
+  }
+
+  // initial attempt + voiceschanged + 1s polling fallback
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.addEventListener('voiceschanged', loadVoices);
+  let polls = 0;
+  const pollVoices = setInterval(() => {
+    if (loadVoices() || ++polls > 20) clearInterval(pollVoices);
+  }, 100);
+
+  rateInp.addEventListener('input', () => {
+    rateLbl.textContent = parseFloat(rateInp.value).toFixed(2) + '×';
+  });
+
+  function gatherText() {
+    const SEL = 'h1, h2, h3, h4, .lede, .subtitle, .body p, .body li, p, li, blockquote';
+    const SKIP = [
+      '.topnav', '.ctrl', '.ctrls', '.narr-panel', '.narr-fab',
+      '.toc-veil', '.toc-card', '.modal-veil', '.modal',
+      '.quiz', 'footer', '.credit', '.attrib', '.stat-chip',
+      '.pills', '.pill', '.tick', '.fact', '.tool',
+      '.hero-tag', '.scroll-cue', '.hero-scroll-hint',
+      '.deck-title', '.counter', '.hint', '.meta-row', '.open', '.tag',
+      '.slide:not(.active)'   // restoration deck: only read the visible slide
+    ].join(',');
+    return Array.from(document.querySelectorAll(SEL))
+      .filter(el => !el.closest(SKIP))
+      .filter(el => {
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0.05;
+      })
+      .map(el => el.textContent.replace(/\s+/g, ' ').trim())
+      .filter(t => t && t.length > 1);
+  }
+
+  function startKeepalive() {
+    stopKeepalive();
+    // Chrome cuts speech off after ~15s; pause+resume restarts the clock
+    keepalive = setInterval(() => {
+      if (active && !synth.paused && synth.speaking) {
+        synth.pause(); synth.resume();
+      }
+    }, 10000);
+  }
+  function stopKeepalive() { if (keepalive) clearInterval(keepalive); keepalive = null; }
+
+  function speakNext() {
+    if (!active) return;
+    if (chunkIdx >= chunks.length) {
+      active = false; updateUI();
+      stopKeepalive();
+      setStatus('✓ Done.', 'ok');
+      return;
+    }
+    setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    const u = new SpeechSynthesisUtterance(chunks[chunkIdx]);
+    const v = voices[+voiceSel.value];
+    if (v) u.voice = v;
+    u.rate  = parseFloat(rateInp.value) || 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    u.onend = () => { chunkIdx++; speakNext(); };
+    u.onerror = (e) => {
+      console.warn('[narr] utterance error', e);
+      chunkIdx++; speakNext();
+    };
+    try {
+      synth.speak(u);
+    } catch (err) {
+      console.error('[narr] speak threw', err);
+      setStatus('Speak failed: ' + err.message, 'err');
+      active = false; updateUI(); stopKeepalive();
+    }
+  }
+
+  function play() {
+    // pick text first
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().trim().length > 4) {
+      chunks = sel.toString().split(/(?<=[.!?])\s+/).filter(Boolean);
+    } else {
+      chunks = gatherText();
+    }
+    if (!chunks.length) { setStatus('No readable text found.', 'err'); return; }
+
+    // make sure voices have a chance to load
+    if (voices.length === 0) loadVoices();
+
+    if (synth.speaking || synth.pending) synth.cancel();
+
+    chunkIdx = 0;
+    active = true;
+    updateUI();
+    startKeepalive();
+    setStatus(`Loading ${chunks.length} segments…`);
+
+    // Chrome: small delay after cancel prevents the new speak() from getting eaten
+    setTimeout(() => {
+      if (!active) return;
+      // If voices STILL aren't loaded, speak with default voice (synth uses system default)
+      speakNext();
+    }, 80);
+  }
+
+  function togglePause() {
+    if (!active) return;
+    if (synth.speaking && !synth.paused) {
+      synth.pause(); setStatus('Paused.');
+    } else if (synth.paused) {
+      synth.resume(); setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    }
+  }
+
+  function stop() {
+    synth.cancel();
+    active = false;
+    stopKeepalive();
+    updateUI();
+    setStatus('Stopped.');
+  }
+
+  function updateUI() {
+    fab.classList.toggle('narrating', active);
+    fab.textContent = active ? '🔊' : '🎧';
+  }
+
+  fab.addEventListener('click', () => panel.classList.toggle('show'));
+  $('narrClose').onclick = () => panel.classList.remove('show');
+  $('narrPlay').onclick  = play;
+  $('narrPause').onclick = togglePause;
+  $('narrStop').onclick  = stop;
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('show')) panel.classList.remove('show');
+  });
+  window.addEventListener('beforeunload', () => synth.cancel());
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scientific Diving — The Hands & Eyes of Marine Restoration</title>
+<style>
+  :root {
+    --ink:     #f4fbff;
+    --muted:   #b9d6ea;
+    --accent:  #6ee7ff;
+    --warm:    #ffd166;
+    --deep:    #021024;
+    --mid:     #052a52;
+    --shallow: #0a4d8c;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #000;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); }
+
+  /* sticky scroll progress */
+  .scroll-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), #fff);
+    width: 0%;
+    z-index: 50;
+    box-shadow: 0 0 12px var(--accent);
+    transition: width 100ms linear;
+  }
+
+  /* nav */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px;
+    z-index: 40;
+    background: linear-gradient(to bottom, rgba(2,16,36,0.85), rgba(2,16,36,0));
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .home-link {
+    color: var(--accent);
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px;
+    text-decoration: none;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .home-link:hover { color: #fff; }
+  .toc-btn {
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(110,231,255,0.4);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .toc-btn:hover { background: rgba(110,231,255,0.15); color: #fff; }
+
+  /* TOC drawer */
+  .toc-veil {
+    position: fixed; inset: 0; z-index: 60;
+    background: rgba(2,8,20,0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .toc-veil.show { display: flex; animation: veilFade 0.2s ease; }
+  @keyframes veilFade { from { opacity: 0; } to { opacity: 1; } }
+  .toc-card {
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.4);
+    border-radius: 16px;
+    padding: 22px 24px;
+    width: min(560px, 100%);
+    max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  }
+  .toc-card h3 {
+    margin: 0 0 12px;
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 2.5px; font-size: 13px;
+  }
+  .toc-card a {
+    display: block;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none; color: var(--ink);
+    font-size: 14px;
+    transition: background 0.15s ease;
+  }
+  .toc-card a:hover { background: rgba(110,231,255,0.10); color: var(--accent); }
+  .toc-card a small {
+    display: block; font-size: 11px; color: var(--muted);
+    margin-top: 2px; letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh; min-height: 620px;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.95) 100%),
+      url("https://upload.wikimedia.org/wikipedia/commons/e/ea/Karimunjawa_shallow_reef.jpg") center/cover;
+  }
+  .hero::after {  /* light rays drift */
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(100deg,
+      rgba(255,255,255,0.08) 0 6px, transparent 6px 100px);
+    mix-blend-mode: screen;
+    animation: rayDrift 18s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes rayDrift {
+    0% { transform: translateX(-60px); }
+    100% { transform: translateX(60px); }
+  }
+  .hero-content {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0 8vw 80px;
+    max-width: 1100px;
+    z-index: 2;
+  }
+  .hero-eye {
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 4px;
+    font-size: 12px; font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .hero-content h1 {
+    margin: 0;
+    font-size: clamp(34px, 6vw, 78px);
+    line-height: 1.02;
+    font-weight: 900;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 30px rgba(0,0,0,0.7);
+  }
+  .hero-content h1 em {
+    font-style: normal; color: var(--accent);
+    background: linear-gradient(135deg, #6ee7ff, #ffe9a8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-content .lede {
+    margin: 18px 0 0;
+    font-size: clamp(15px, 1.6vw, 21px);
+    max-width: 760px; color: var(--ink); opacity: 0.95;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.65);
+  }
+  .hero-tag {
+    display: inline-flex; gap: 8px; align-items: center;
+    margin-top: 22px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .hero-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .scroll-cue {
+    position: absolute;
+    left: 50%; bottom: 24px;
+    transform: translateX(-50%);
+    color: var(--accent);
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    z-index: 3;
+    animation: cuePulse 2.4s ease-in-out infinite;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+  }
+  @keyframes cuePulse {
+    0%,100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+    50%     { transform: translateX(-50%) translateY(6px); opacity: 1; }
+  }
+
+  /* drifting bubbles, persistent across whole page */
+  .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bubble {
+    position: absolute;
+    bottom: -30px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ffffff99, #ffffff22 60%, transparent 70%);
+    animation: bubbleUp linear infinite;
+  }
+  @keyframes bubbleUp {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 0.8; }
+    100% { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+  }
+
+  /* SECTION layout */
+  main { position: relative; z-index: 2; }
+  section.story {
+    position: relative;
+    padding: 90px 8vw;
+    background: linear-gradient(180deg, #021024 0%, #052a52 50%, #021024 100%);
+    overflow: hidden;
+  }
+  section.story:nth-child(even of .story) {
+    background: linear-gradient(180deg, #052a52 0%, #021024 50%, #052a52 100%);
+  }
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(20px, 4vw, 60px);
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .story.flip .story-grid { direction: rtl; }
+  .story.flip .story-grid > * { direction: ltr; }
+  @media (max-width: 800px) {
+    .story-grid { grid-template-columns: 1fr; }
+    section.story { padding: 60px 6vw; }
+  }
+  .story-text .eye {
+    color: var(--accent);
+    text-transform: uppercase; letter-spacing: 3px;
+    font-size: 11px; font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .story-text h2 {
+    margin: 0 0 14px;
+    font-size: clamp(26px, 3.4vw, 40px);
+    line-height: 1.1; font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .story-text h2 em {
+    font-style: normal;
+    background: linear-gradient(135deg, #6ee7ff, #fff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .story-text p {
+    margin: 0 0 12px;
+    font-size: clamp(14px, 1.15vw, 16px);
+    color: var(--muted);
+  }
+  .story-text strong { color: #fff; }
+  .story-text em { color: var(--accent); font-style: normal; }
+  .story-text ul {
+    margin: 8px 0; padding-left: 20px;
+    color: var(--muted);
+  }
+  .story-text li { margin: 4px 0; }
+  .pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 14px;
+  }
+  .pills span {
+    padding: 4px 10px;
+    background: rgba(110,231,255,0.10);
+    border: 1px solid rgba(110,231,255,0.35);
+    border-radius: 999px;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .story-art {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    aspect-ratio: 4 / 3;
+    background: #021024;
+    border: 1px solid rgba(110,231,255,0.18);
+  }
+  .story-art img,
+  .story-art .bg-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 12s ease;
+  }
+  .story-art:hover .bg-img { transform: scale(1.06); }
+  .story-art .credit {
+    position: absolute; left: 10px; bottom: 8px;
+    font-size: 10px; color: rgba(255,255,255,0.65);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    letter-spacing: 0.5px;
+  }
+  .story-art.svg-art {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(180deg, #0a4d8c 0%, #052a52 60%, #021024 100%);
+    display: grid; place-items: center;
+    padding: 20px;
+  }
+  .story-art.svg-art svg { width: 92%; height: 92%; max-width: 560px; }
+
+  /* fade-in on scroll */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* facts strip */
+  .facts {
+    background: linear-gradient(135deg, rgba(110,231,255,0.10), rgba(0,0,0,0.5));
+    padding: 50px 8vw;
+    border-top: 1px solid rgba(110,231,255,0.2);
+    border-bottom: 1px solid rgba(110,231,255,0.2);
+  }
+  .facts-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  @media (max-width: 800px) { .facts-grid { grid-template-columns: 1fr 1fr; } }
+  .fact {
+    text-align: center;
+    padding: 18px 10px;
+    background: rgba(2,16,36,0.45);
+    border: 1px solid rgba(110,231,255,0.25);
+    border-radius: 14px;
+  }
+  .fact .num {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #6ee7ff, #ffe9a8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+  .fact .lbl {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 8px;
+  }
+
+  /* tool cards strip */
+  .tools {
+    padding: 80px 8vw;
+    background: linear-gradient(180deg, #021024, #052a52);
+  }
+  .tools h2 {
+    text-align: center;
+    margin: 0 0 28px;
+    font-size: clamp(24px, 3vw, 36px);
+  }
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .tool {
+    padding: 20px 18px;
+    background: rgba(2,16,36,0.6);
+    border: 1px solid rgba(110,231,255,0.25);
+    border-radius: 14px;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    cursor: default;
+  }
+  .tool:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    background: rgba(110,231,255,0.08);
+  }
+  .tool .icon {
+    width: 64px; height: 64px;
+    margin-bottom: 12px;
+  }
+  .tool h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .tool p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  /* closing CTA */
+  .closing {
+    position: relative;
+    padding: 100px 8vw;
+    overflow: hidden;
+    text-align: center;
+    background:
+      linear-gradient(180deg, rgba(2,16,36,0.55), rgba(2,16,36,0.92)),
+      url("https://upload.wikimedia.org/wikipedia/commons/6/67/Kelp_forest.jpg") center/cover;
+  }
+  .closing h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    margin: 0 0 10px;
+  }
+  .closing p {
+    font-size: clamp(14px, 1.4vw, 18px);
+    color: var(--muted);
+    max-width: 760px; margin: 0 auto 22px;
+  }
+  .closing .row {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin-top: 18px;
+  }
+  .closing a.btn {
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    color: #022;
+    text-decoration: none;
+    font-weight: 800;
+    border-radius: 999px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 12px;
+    box-shadow: 0 8px 30px rgba(110,231,255,0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .closing a.btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(110,231,255,0.5); }
+  .closing a.btn.ghost {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    box-shadow: none;
+  }
+
+  footer {
+    background: #000; color: var(--muted); font-size: 12px;
+    text-align: center; padding: 30px 6vw;
+    border-top: 1px solid rgba(110,231,255,0.1);
+  }
+  footer a { color: var(--accent); }
+
+  /* swimming diver decoration (animation) */
+  .swim-deco {
+    animation: swimAcross 28s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes swimAcross {
+    0%   { transform: translateX(-25vw); }
+    100% { transform: translateX(125vw); }
+  }
+  .bob { animation: bob 4s ease-in-out infinite; }
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-8px); }
+  }
+  .wiggle { animation: wiggle 1.6s ease-in-out infinite; transform-origin: bottom center; }
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-2deg); }
+    50%     { transform: rotate(2deg); }
+  }
+  .float-up {
+    animation: floatUp 6s ease-in-out infinite;
+  }
+  @keyframes floatUp {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-bar" id="scrollBar"></div>
+
+<nav class="topnav">
+  <a class="home-link" href="dan-aquatic-ecology.html">← back to ecology overview</a>
+  <button class="toc-btn" id="tocBtn">📑 Sections</button>
+</nav>
+
+<div class="ambient">
+  <div class="bubble" style="left:6%; width:6px; height:6px; animation-duration:14s;"></div>
+  <div class="bubble" style="left:14%; width:10px; height:10px; animation-duration:18s; animation-delay:3s;"></div>
+  <div class="bubble" style="left:22%; width:5px; height:5px; animation-duration:11s; animation-delay:1s;"></div>
+  <div class="bubble" style="left:38%; width:8px; height:8px; animation-duration:16s; animation-delay:6s;"></div>
+  <div class="bubble" style="left:55%; width:7px; height:7px; animation-duration:13s; animation-delay:2s;"></div>
+  <div class="bubble" style="left:67%; width:11px; height:11px; animation-duration:19s; animation-delay:4s;"></div>
+  <div class="bubble" style="left:78%; width:6px; height:6px; animation-duration:12s; animation-delay:0.5s;"></div>
+  <div class="bubble" style="left:88%; width:9px; height:9px; animation-duration:17s; animation-delay:5s;"></div>
+  <div class="bubble" style="left:95%; width:5px; height:5px; animation-duration:15s; animation-delay:2.5s;"></div>
+</div>
+
+<!-- ─────────────────────── HERO ─────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-content">
+    <div class="hero-eye">A Deep-Dive Story · Aquatic Restoration Ecology</div>
+    <h1>The hands and eyes of <em>marine restoration</em> wear regulators.</h1>
+    <p class="lede">
+      Most of the work that brings a reef back from the dead happens
+      <strong>20 meters down</strong>, in cold dark water, by people running
+      transect tape, gluing coral fragments, and counting fish by hand.
+      This is <em>scientific diving</em> — and without it, modern aquatic
+      restoration ecology would not exist.
+    </p>
+    <div class="hero-tag"><span class="dot"></span>13 chapters · ~12 minute read · scroll to begin</div>
+  </div>
+  <div class="scroll-cue">↓ dive in</div>
+</section>
+
+<main>
+
+<!-- ─────────────────────── 1. INTRO ─────────────────────── -->
+<section class="story" id="s-intro">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 1 · WHAT IT IS</div>
+      <h2>Diving for <em>data</em>, not for sport.</h2>
+      <p>
+        <strong>Scientific diving</strong> is SCUBA performed exclusively in support of research,
+        education, or restoration — never for recreation, never for commercial pay.
+        It is its own legal and professional category, regulated in the United States
+        by an <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.401" target="_blank" rel="noopener">OSHA exemption</a>
+        and governed by the <strong>American Academy of Underwater Sciences (AAUS)</strong>.
+      </p>
+      <p>
+        A scientific diver doesn't go down to look — they go down to <em>do work</em>: lay a transect,
+        photograph a quadrat, hand-plant coral fragments, count urchins, collect a water sample,
+        retrieve a hydrophone. The dive is the lab visit.
+      </p>
+      <div class="pills">
+        <span>AAUS-credentialed</span><span>OSHA exempt</span><span>Research only</span>
+      </div>
+    </div>
+    <div class="story-art reveal">
+      <img class="bg-img" src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Karimunjawa_shallow_reef.jpg" alt="A shallow tropical reef — the kind of habitat where most restoration diving takes place"/>
+      <div class="credit">Karimunjawa shallow reef · Wikimedia Commons</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 2. WHY DIVERS ─────────────────────── -->
+<section class="story flip" id="s-why">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 2 · WHY HUMAN DIVERS</div>
+      <h2>Robots can <em>see</em>. Divers can <em>act</em>.</h2>
+      <p>
+        ROVs and drones have transformed deep-water observation, but most aquatic
+        restoration work is in the upper <strong>30 meters</strong> — and at that depth, a
+        trained human is faster, cheaper, and more delicate than any robot.
+      </p>
+      <p>
+        Restoration is hand work. A diver can:
+      </p>
+      <ul>
+        <li>Glue a 2 cm coral fragment onto reef rock with marine epoxy.</li>
+        <li>Tease apart bleached <em>Acropora</em> for microfragmentation.</li>
+        <li>Hand-plant seagrass shoots into bare-root anchors.</li>
+        <li>Spear an invasive lionfish without disturbing its neighbors.</li>
+        <li>Identify a juvenile parrotfish by eye, in 3 seconds, while it darts past.</li>
+      </ul>
+      <p>
+        ROVs cannot do <em>any</em> of those reliably. Not yet.
+      </p>
+    </div>
+    <div class="story-art svg-art reveal">
+      <svg viewBox="0 0 600 450" aria-label="Scientific diver hovering over a reef">
+        <!-- soft caustics -->
+        <defs>
+          <radialGradient id="surfaceLight" cx="50%" cy="0%" r="80%">
+            <stop offset="0%" stop-color="#ffe9a8" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#ffe9a8" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width="600" height="450" fill="url(#surfaceLight)"/>
+        <!-- light rays -->
+        <line x1="120" y1="0" x2="180" y2="200" stroke="#ffe9a8" stroke-opacity="0.18" stroke-width="14"/>
+        <line x1="280" y1="0" x2="320" y2="220" stroke="#ffe9a8" stroke-opacity="0.14" stroke-width="20"/>
+        <line x1="440" y1="0" x2="500" y2="240" stroke="#ffe9a8" stroke-opacity="0.16" stroke-width="14"/>
+        <!-- seafloor -->
+        <path d="M0 380 Q 150 340 300 360 Q 450 380 600 350 L 600 450 L 0 450 Z" fill="#3d2a14"/>
+        <!-- coral on floor -->
+        <path d="M70 380 Q 60 350 70 330 M 70 360 Q 55 350 50 335 M 70 360 Q 85 350 90 335" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M520 370 Q 510 340 520 320 M 520 350 Q 505 340 500 325 M 520 350 Q 535 340 540 325" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- DIVER -->
+        <g class="bob" transform="translate(220,160)">
+          <!-- body -->
+          <ellipse cx="80" cy="80" rx="68" ry="38" fill="#1a2f4d" stroke="#0a172a" stroke-width="3"/>
+          <!-- BCD straps -->
+          <path d="M40 70 Q 80 60 120 70 M 40 90 Q 80 100 120 90" stroke="#ff5b6e" stroke-width="3" fill="none"/>
+          <!-- head/hood -->
+          <circle cx="22" cy="80" r="22" fill="#0a172a" stroke="#000" stroke-width="2"/>
+          <!-- mask -->
+          <path d="M2 76 Q 22 64 42 76 L 42 90 Q 22 96 2 90 Z" fill="#7fd6ff" stroke="#022" stroke-width="2"/>
+          <line x1="42" y1="83" x2="50" y2="83" stroke="#0a172a" stroke-width="2"/>
+          <!-- regulator -->
+          <rect x="0" y="86" width="10" height="10" rx="2" fill="#222"/>
+          <line x1="6" y1="96" x2="6" y2="120" stroke="#222" stroke-width="2"/>
+          <!-- arms reaching forward -->
+          <path d="M50 100 Q 90 130 130 140" stroke="#1a2f4d" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M130 140 L 158 138" stroke="#ffd166" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- coral fragment in hand -->
+          <circle cx="160" cy="138" r="6" fill="#ff8c8c" stroke="#7a1010" stroke-width="2"/>
+          <!-- legs and fins -->
+          <path d="M140 80 Q 200 70 230 60 L 246 56 L 244 70 L 230 76 Q 200 80 150 90 Z" fill="#0a172a"/>
+          <path d="M140 100 Q 200 110 230 120 L 246 124 L 244 110 L 230 104 Q 200 100 150 90 Z" fill="#0a172a"/>
+          <!-- tank -->
+          <rect x="100" y="44" width="22" height="60" rx="6" fill="#888" stroke="#444" stroke-width="2"/>
+          <rect x="105" y="40" width="12" height="8" fill="#444"/>
+          <!-- bubble trail -->
+          <circle cx="14" cy="60" r="4" fill="#fff" opacity="0.85"/>
+          <circle cx="6" cy="46" r="3" fill="#fff" opacity="0.7"/>
+          <circle cx="20" cy="32" r="5" fill="#fff" opacity="0.6"/>
+          <circle cx="10" cy="14" r="3" fill="#fff" opacity="0.4"/>
+        </g>
+        <!-- transect tape -->
+        <path d="M150 300 L 480 320" stroke="#ffd166" stroke-width="2" stroke-dasharray="6 4"/>
+        <!-- a tagged transect peg -->
+        <rect x="146" y="296" width="6" height="14" fill="#ffd166"/>
+        <rect x="478" y="316" width="6" height="14" fill="#ffd166"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 3. TRAINING ─────────────────────── -->
+<section class="story" id="s-training">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 3 · BECOMING ONE</div>
+      <h2>Hours, not weekends.</h2>
+      <p>
+        Recreational SCUBA certification takes a long weekend. AAUS scientific-diver
+        certification takes <strong>about a hundred hours of training</strong> plus
+        12 supervised training dives, a written exam, dive physiology, dive medicine,
+        rescue, and a working understanding of decompression theory.
+      </p>
+      <p>
+        After certification, divers are <em>depth-rated</em> incrementally — 18 m, 30 m,
+        40 m, 45 m, 60 m — by accumulating logged dives at each depth under a Diving
+        Safety Officer's supervision. A new diver cannot just decide to work at 30 m;
+        they have to <em>earn</em> that depth tier by tier.
+      </p>
+      <p>
+        Programs at Smithsonian, Scripps, NOAA, Woods Hole, and dozens of universities
+        operate under AAUS reciprocity — letting researchers dive at partner institutions
+        anywhere in the world.
+      </p>
+      <div class="pills"><span>AAUS Standards</span><span>OSHA exemption</span><span>Reciprocity</span></div>
+    </div>
+    <div class="story-art svg-art reveal">
+      <!-- training: classroom + pool + open water -->
+      <svg viewBox="0 0 600 450">
+        <!-- water column tiers -->
+        <rect x="0" y="0" width="600" height="120" fill="#7ec8e3"/>
+        <rect x="0" y="120" width="600" height="120" fill="#2a8fc9"/>
+        <rect x="0" y="240" width="600" height="120" fill="#0a4d8c"/>
+        <rect x="0" y="360" width="600" height="90" fill="#052a52"/>
+        <!-- depth labels -->
+        <text x="20" y="30" fill="#022" font-size="14" font-weight="700">Confined water · pool</text>
+        <text x="20" y="150" fill="#fff" font-size="14" font-weight="700">18 m · open water</text>
+        <text x="20" y="270" fill="#fff" font-size="14" font-weight="700">30 m · earned tier</text>
+        <text x="20" y="390" fill="#fff" font-size="14" font-weight="700">40 m+ · advanced</text>
+        <!-- divers descending the depth staircase -->
+        <g transform="translate(380,60)">
+          <ellipse cx="0" cy="0" rx="34" ry="18" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+          <circle cx="-30" cy="0" r="11" fill="#0a172a"/>
+          <rect x="-40" y="-3" width="14" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+        </g>
+        <g transform="translate(420,180)">
+          <ellipse cx="0" cy="0" rx="34" ry="18" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+          <circle cx="-30" cy="0" r="11" fill="#0a172a"/>
+          <rect x="-40" y="-3" width="14" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+        </g>
+        <g transform="translate(460,300)">
+          <ellipse cx="0" cy="0" rx="34" ry="18" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+          <circle cx="-30" cy="0" r="11" fill="#0a172a"/>
+          <rect x="-40" y="-3" width="14" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+        </g>
+        <g transform="translate(500,410)">
+          <ellipse cx="0" cy="0" rx="34" ry="18" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+          <circle cx="-30" cy="0" r="11" fill="#0a172a"/>
+          <rect x="-40" y="-3" width="14" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+        </g>
+        <!-- dotted descent path -->
+        <path d="M380 60 L 420 180 L 460 300 L 500 410" stroke="#ffe9a8" stroke-width="2" stroke-dasharray="5 5" fill="none"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 4. TRANSECTS ─────────────────────── -->
+<section class="story flip" id="s-transect">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 4 · THE BREAD AND BUTTER</div>
+      <h2>The <em>transect</em> is the laboratory.</h2>
+      <p>
+        Roll out a 30-meter fiberglass tape. Anchor it to the reef. Two divers swim
+        along it, one on each side. One records every coral colony intersected by the
+        tape (<strong>point-intercept transect</strong>). The other counts every fish
+        within a 2-meter belt either side and estimates length to the nearest centimeter.
+      </p>
+      <p>
+        Repeat at the same site in March, June, September, December, year after year.
+        Within five years you have a population trajectory. Within twenty, you have a
+        record that no satellite, no drone, and no ROV can match.
+      </p>
+      <p>
+        <strong>Quadrat photography</strong> works the same way: a 1×1 m PVC square,
+        a strobe, an SLR housing. Point-counts are scored later in the lab using software
+        like <em>CoralNet</em> or <em>CPCe</em>.
+      </p>
+      <div class="pills"><span>Point-intercept</span><span>Belt transect</span><span>Photo-quadrat</span></div>
+    </div>
+    <div class="story-art svg-art reveal">
+      <svg viewBox="0 0 600 450">
+        <!-- water -->
+        <rect x="0" y="0" width="600" height="450" fill="url(#bg2)"/>
+        <defs>
+          <linearGradient id="bg2" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#0a4d8c"/>
+            <stop offset="100%" stop-color="#021024"/>
+          </linearGradient>
+        </defs>
+        <!-- seafloor -->
+        <path d="M0 350 Q 150 320 300 340 Q 450 360 600 330 L 600 450 L 0 450 Z" fill="#3d2a14"/>
+        <!-- transect tape running across -->
+        <line x1="40" y1="370" x2="560" y2="360" stroke="#ffd166" stroke-width="3"/>
+        <!-- transect ticks at meters -->
+        <g stroke="#ffd166" stroke-width="2">
+          <line x1="40" y1="365" x2="40" y2="375"/>
+          <line x1="100" y1="365" x2="100" y2="375"/>
+          <line x1="160" y1="365" x2="160" y2="375"/>
+          <line x1="220" y1="365" x2="220" y2="375"/>
+          <line x1="280" y1="365" x2="280" y2="375"/>
+          <line x1="340" y1="365" x2="340" y2="375"/>
+          <line x1="400" y1="365" x2="400" y2="375"/>
+          <line x1="460" y1="365" x2="460" y2="375"/>
+          <line x1="520" y1="365" x2="520" y2="375"/>
+        </g>
+        <text x="40" y="395" fill="#ffd166" font-size="10">0m</text>
+        <text x="270" y="395" fill="#ffd166" font-size="10">15m</text>
+        <text x="510" y="395" fill="#ffd166" font-size="10">30m</text>
+        <!-- coral colonies along it -->
+        <path d="M120 360 Q 110 330 120 310 M 120 340 Q 100 325 92 310" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M260 358 Q 250 330 260 308" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M380 354 Q 360 320 380 300 M 380 330 Q 400 320 410 308" stroke="#ff6f8a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- diver swimming above tape with quadrat -->
+        <g class="bob" transform="translate(150,230)">
+          <ellipse cx="60" cy="40" rx="56" ry="22" fill="#1a2f4d" stroke="#0a172a" stroke-width="3"/>
+          <circle cx="14" cy="40" r="14" fill="#0a172a"/>
+          <rect x="2" y="36" width="14" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+          <rect x="80" y="22" width="20" height="44" rx="4" fill="#888" stroke="#444" stroke-width="2"/>
+          <path d="M50 60 Q 80 80 110 90" stroke="#1a2f4d" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <!-- holding a quadrat (square frame) -->
+          <rect x="100" y="80" width="34" height="34" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <line x1="117" y1="80" x2="117" y2="114" stroke="#fff" stroke-width="1"/>
+          <line x1="100" y1="97" x2="134" y2="97" stroke="#fff" stroke-width="1"/>
+          <!-- fins -->
+          <path d="M100 30 Q 160 20 190 10 L 206 6 L 204 22 L 190 26 Q 160 30 110 40 Z" fill="#0a172a"/>
+        </g>
+        <!-- second diver further away -->
+        <g class="bob" style="animation-delay: -2s;" transform="translate(380,210)">
+          <ellipse cx="60" cy="40" rx="50" ry="20" fill="#1a2f4d" stroke="#0a172a" stroke-width="3"/>
+          <circle cx="14" cy="40" r="13" fill="#0a172a"/>
+          <rect x="3" y="36" width="13" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+          <rect x="80" y="22" width="18" height="40" rx="4" fill="#888" stroke="#444" stroke-width="2"/>
+          <path d="M100 30 Q 150 24 180 18 L 192 14 L 190 28 L 180 30 Q 150 32 110 40 Z" fill="#0a172a"/>
+          <!-- slate -->
+          <rect x="50" y="60" width="22" height="28" fill="#fff" stroke="#022" stroke-width="2"/>
+          <line x1="54" y1="68" x2="68" y2="68" stroke="#022" stroke-width="1"/>
+          <line x1="54" y1="74" x2="68" y2="74" stroke="#022" stroke-width="1"/>
+          <line x1="54" y1="80" x2="64" y2="80" stroke="#022" stroke-width="1"/>
+        </g>
+        <!-- bubbles trailing from divers -->
+        <circle cx="155" cy="240" r="3" fill="#fff" opacity="0.7"/>
+        <circle cx="160" cy="220" r="4" fill="#fff" opacity="0.6"/>
+        <circle cx="155" cy="200" r="3" fill="#fff" opacity="0.4"/>
+        <circle cx="385" cy="220" r="3" fill="#fff" opacity="0.7"/>
+        <circle cx="390" cy="200" r="4" fill="#fff" opacity="0.6"/>
+        <!-- school of small fish -->
+        <g fill="#7fd6ff" stroke="#0a4d8c" stroke-width="1">
+          <path d="M260 160 Q 270 150 285 160 Q 270 170 260 160 Z M 285 160 L 295 156 L 295 164 Z"/>
+          <path d="M295 175 Q 305 165 320 175 Q 305 185 295 175 Z M 320 175 L 330 171 L 330 179 Z"/>
+          <path d="M275 195 Q 285 185 300 195 Q 285 205 275 195 Z M 300 195 L 310 191 L 310 199 Z"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 5. CORAL OUTPLANTING ─────────────────────── -->
+<section class="story" id="s-coral">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 5 · CORAL UP CLOSE</div>
+      <h2>Glue. Wait. <em>Watch a forest grow.</em></h2>
+      <p>
+        Branching corals like <em>Acropora cervicornis</em> can be grown in
+        underwater tree nurseries — PVC trees with monofilament arms, each holding
+        a 5-cm fragment. After 6–9 months a fragment becomes a 30-cm colony.
+      </p>
+      <p>
+        Divers cut, tag, hang, and eventually <strong>outplant</strong> these
+        fragments onto degraded reef. The technique is wonderfully low-tech:
+        epoxy putty, a wire brush, a hammer, and a sharp eye for substrate.
+      </p>
+      <p>
+        For slow-growing massive corals (<em>Orbicella</em>, <em>Diploria</em>),
+        practitioners now use <strong>microfragmentation</strong> — chunks just
+        1 cm across, which trigger a wound-response that grows them <em>5–25× faster</em>
+        than normal. A diver who plants 200 microfragments today is planting a
+        coral head ten years ahead of schedule.
+      </p>
+      <div class="pills"><span>Acropora cervicornis</span><span>Microfragmentation</span><span>Tree nursery</span></div>
+    </div>
+    <div class="story-art reveal">
+      <img class="bg-img" src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Acropora_pulchra.jpg" alt="Acropora coral — a branching genus that responds especially well to fragmentation"/>
+      <div class="credit">Acropora pulchra · Wikimedia Commons</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 6. SEAGRASS ─────────────────────── -->
+<section class="story flip" id="s-seagrass">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 6 · MEADOWS BY HAND</div>
+      <h2>Planting the underwater <em>prairie</em>.</h2>
+      <p>
+        Seagrass restoration is the patient sibling of coral work. Two methods
+        dominate, and divers run both:
+      </p>
+      <p>
+        <strong>Bare-root planting</strong>: a diver harvests donor shoots from a healthy
+        meadow, swims to the bare site, and presses each shoot into the sediment with a
+        burlap or paper anchor that biodegrades in a season. Each diver can plant
+        ~250 shoots per dive.
+      </p>
+      <p>
+        <strong>Seed broadcasting</strong>: in the Virginia Coast Reserve project — the
+        largest seagrass restoration on record — researchers spread <strong>over 70 million
+        Zostera seeds</strong> across decades, recovering more than 9,000 acres of meadow
+        from a system extirpated by disease in the 1930s.
+      </p>
+      <p>
+        Light is almost always the limit. If water clarity drops, no amount of planting
+        will help — the divers' first job is often <em>diagnosing</em> why a meadow died.
+      </p>
+      <div class="pills"><span>Zostera marina</span><span>Bare-root</span><span>Seed broadcast</span></div>
+    </div>
+    <div class="story-art reveal">
+      <img class="bg-img" src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Zostera_marina_-_National_Museum_of_Nature_and_Science%2C_Tokyo_-_DSC07663.JPG" alt="Zostera marina — eelgrass — the workhorse seagrass of temperate restoration"/>
+      <div class="credit">Zostera marina (eelgrass) · Wikimedia Commons</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 7. OYSTERS ─────────────────────── -->
+<section class="story" id="s-oysters">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 7 · LIVING FILTERS</div>
+      <h2>Building a reef <em>shell by shell</em>.</h2>
+      <p>
+        Oyster reefs in Chesapeake Bay sit at less than <strong>1%</strong> of their
+        pre-colonial biomass. Restoration deploys recycled shell (<em>cultch</em>),
+        limestone, or concrete as settlement substrate, then seeds it with hatchery
+        spat. Divers monitor the reefs for vertical relief, density, and recruitment.
+      </p>
+      <p>
+        A single adult oyster filters up to <strong>50 gallons of water per day</strong>.
+        A restored reef the size of a city block is, ecologically, a small wastewater
+        plant — and a fish nursery, and a wave break, all at once.
+      </p>
+      <p>
+        Modern oyster restoration is increasingly <em>3D-printed</em> — modular,
+        textured units cast specifically to mimic the rugosity wild reefs build
+        from their own shells.
+      </p>
+      <div class="pills"><span>Crassostrea virginica</span><span>Cultch &amp; spat</span><span>3D-printed reefs</span></div>
+    </div>
+    <div class="story-art reveal">
+      <img class="bg-img" src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Sanbanze_kakisyo_nekozane.jpg" alt="An exposed oyster bed showing the dense, three-dimensional structure restoration aims to rebuild"/>
+      <div class="credit">Oyster bed · Wikimedia Commons</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 8. INVASIVES ─────────────────────── -->
+<section class="story flip" id="s-invasives">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 8 · UNDERWATER PEST CONTROL</div>
+      <h2>Sometimes restoration is a <em>pole spear</em>.</h2>
+      <p>
+        In the western Atlantic and Caribbean, <strong>lionfish</strong> (<em>Pterois volitans</em>)
+        — released from aquaria in the 1980s — have decimated native reef-fish
+        biomass. They have no natural predators in their introduced range. The
+        management response has been almost entirely <em>diver-led</em>: spearfishing
+        derbies, <em>Z.E.A.</em> (Zoo and Aquarium) cull events, and ENGO partnerships
+        like <em>Reef Environmental Education Foundation</em>'s lionfish program.
+      </p>
+      <p>
+        On the Great Barrier Reef the equivalent is the <strong>crown-of-thorns starfish</strong>
+        (<em>Acanthaster planci</em>) — coral-eating, periodically eruptive, and
+        ecologically devastating during outbreaks. The Australian Institute of Marine
+        Science runs a year-round dive culling program, injecting individual stars
+        with bile salts.
+      </p>
+      <p>
+        It's the messiest, most physical end of restoration ecology. There's no
+        graceful way to spear a lionfish. There's no dignified way to hold an
+        injection gun against a star covered in venomous spines.
+      </p>
+      <div class="pills"><span>Pterois volitans</span><span>COTS injection</span><span>Diver-led management</span></div>
+    </div>
+    <div class="story-art svg-art reveal">
+      <svg viewBox="0 0 600 450">
+        <defs>
+          <linearGradient id="bg3" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#0a4d8c"/>
+            <stop offset="100%" stop-color="#021024"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="600" height="450" fill="url(#bg3)"/>
+        <!-- light rays -->
+        <line x1="100" y1="0" x2="160" y2="160" stroke="#ffe9a8" stroke-opacity="0.14" stroke-width="14"/>
+        <line x1="280" y1="0" x2="320" y2="180" stroke="#ffe9a8" stroke-opacity="0.10" stroke-width="20"/>
+        <line x1="460" y1="0" x2="500" y2="180" stroke="#ffe9a8" stroke-opacity="0.12" stroke-width="14"/>
+        <!-- diver with pole spear -->
+        <g class="bob" transform="translate(70,180)">
+          <ellipse cx="60" cy="40" rx="56" ry="22" fill="#1a2f4d" stroke="#0a172a" stroke-width="3"/>
+          <circle cx="14" cy="40" r="13" fill="#0a172a"/>
+          <rect x="3" y="36" width="13" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+          <rect x="80" y="22" width="20" height="40" rx="4" fill="#888" stroke="#444" stroke-width="2"/>
+          <!-- arm with pole spear -->
+          <path d="M70 60 Q 110 70 150 70" stroke="#1a2f4d" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <!-- pole spear -->
+          <line x1="150" y1="70" x2="320" y2="100" stroke="#cdcdcd" stroke-width="3"/>
+          <!-- spear tip -->
+          <polygon points="320,98 332,100 320,102" fill="#fff"/>
+          <!-- fins -->
+          <path d="M100 30 Q 160 20 190 12 L 206 8 L 204 24 L 190 28 Q 160 32 110 40 Z" fill="#0a172a"/>
+        </g>
+        <!-- LIONFISH -->
+        <g transform="translate(350,210)">
+          <ellipse cx="60" cy="0" rx="44" ry="18" fill="#ffb37a" stroke="#7a1010" stroke-width="2"/>
+          <!-- stripes -->
+          <line x1="40" y1="-16" x2="40" y2="16" stroke="#7a1010" stroke-width="3"/>
+          <line x1="56" y1="-17" x2="56" y2="17" stroke="#7a1010" stroke-width="3"/>
+          <line x1="72" y1="-16" x2="72" y2="16" stroke="#7a1010" stroke-width="3"/>
+          <!-- venomous spines -->
+          <line x1="44" y1="-18" x2="40" y2="-46" stroke="#7a1010" stroke-width="2"/>
+          <line x1="56" y1="-18" x2="58" y2="-50" stroke="#7a1010" stroke-width="2"/>
+          <line x1="68" y1="-18" x2="76" y2="-46" stroke="#7a1010" stroke-width="2"/>
+          <line x1="80" y1="-16" x2="92" y2="-40" stroke="#7a1010" stroke-width="2"/>
+          <!-- lower fan -->
+          <path d="M30 18 Q 60 50 90 18 Z" fill="#ffb37a" stroke="#7a1010" stroke-width="2" opacity="0.7"/>
+          <!-- tail -->
+          <path d="M104 0 L 134 -22 L 130 0 L 134 22 Z" fill="#ffb37a" stroke="#7a1010" stroke-width="2"/>
+          <!-- eye + mouth -->
+          <circle cx="40" cy="-2" r="3" fill="#022"/>
+          <line x1="20" y1="6" x2="32" y2="6" stroke="#7a1010" stroke-width="2"/>
+        </g>
+        <!-- coral that's being protected -->
+        <path d="M460 360 Q 450 320 460 290 M 460 320 Q 442 310 432 290 M 460 320 Q 478 310 488 290" stroke="#ff6f8a" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M70 380 Q 60 350 70 330" stroke="#ff8c8c" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- floor -->
+        <path d="M0 380 Q 200 360 400 380 Q 500 390 600 370 L 600 450 L 0 450 Z" fill="#3d2a14"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 9. PHOTOGRAMMETRY ─────────────────────── -->
+<section class="story" id="s-photo">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 9 · 3D FROM 2D</div>
+      <h2>Flying transects to <em>build a reef</em> in software.</h2>
+      <p>
+        <strong>Structure-from-motion photogrammetry</strong> turns a diver's
+        camera into a sub-millimeter mapping rig. The diver swims a slow,
+        overlapping lawnmower pattern over a reef section — typically 20×20 m —
+        snapping a photo every meter. A few thousand images later, software like
+        <em>Agisoft Metashape</em> or <em>RealityCapture</em> stitches them into a
+        textured 3D mesh.
+      </p>
+      <p>
+        Researchers can now measure <strong>rugosity</strong> (surface complexity),
+        coral volume, and individual colony growth between visits with the same
+        precision a forester measures trees. A reef in 2024 vs. the same reef in
+        2027 is a comparison of two 3D models.
+      </p>
+      <p>
+        The diving is harder than it sounds: depth, current, and battery all
+        compound. The data, once processed, is pristine.
+      </p>
+      <div class="pills"><span>Structure-from-motion</span><span>Rugosity</span><span>Time-series 3D</span></div>
+    </div>
+    <div class="story-art svg-art reveal">
+      <svg viewBox="0 0 600 450">
+        <defs>
+          <linearGradient id="bg4" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#0a4d8c"/>
+            <stop offset="100%" stop-color="#021024"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="600" height="450" fill="url(#bg4)"/>
+        <!-- floor with reef texture -->
+        <path d="M0 360 Q 100 340 200 360 Q 300 380 400 350 Q 500 330 600 360 L 600 450 L 0 450 Z" fill="#3d2a14"/>
+        <path d="M50 400 Q 60 380 70 360 M 60 388 Q 50 380 44 374" stroke="#ff6f8a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M180 400 Q 190 380 200 360 M 190 388 Q 200 380 206 374 M 190 388 Q 180 382 174 376" stroke="#ff8c8c" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M340 400 Q 350 380 360 360 M 350 388 Q 360 380 366 374" stroke="#ff6f8a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M480 400 Q 490 380 500 360 M 490 388 Q 480 382 474 376" stroke="#ff8c8c" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- lawnmower flight path -->
+        <path d="M80 100 L 520 100 L 520 150 L 80 150 L 80 200 L 520 200 L 520 250 L 80 250 L 80 300 L 520 300"
+              stroke="#ffd166" stroke-width="2" stroke-dasharray="6 4" fill="none"/>
+        <!-- diver with camera rig -->
+        <g class="bob" transform="translate(420,260)">
+          <ellipse cx="60" cy="40" rx="56" ry="22" fill="#1a2f4d" stroke="#0a172a" stroke-width="3"/>
+          <circle cx="14" cy="40" r="13" fill="#0a172a"/>
+          <rect x="3" y="36" width="13" height="8" fill="#7fd6ff" stroke="#022" stroke-width="1.5"/>
+          <rect x="80" y="22" width="20" height="40" rx="4" fill="#888" stroke="#444" stroke-width="2"/>
+          <!-- arms holding camera tray -->
+          <path d="M55 60 Q 80 75 110 80" stroke="#1a2f4d" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M70 70 Q 80 85 95 92" stroke="#1a2f4d" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <!-- camera housing tray -->
+          <rect x="100" y="78" width="30" height="22" rx="3" fill="#222" stroke="#000" stroke-width="2"/>
+          <!-- two strobes -->
+          <line x1="100" y1="80" x2="86" y2="60" stroke="#444" stroke-width="2"/>
+          <circle cx="84" cy="58" r="6" fill="#fff" stroke="#888" stroke-width="2"/>
+          <line x1="130" y1="80" x2="144" y2="60" stroke="#444" stroke-width="2"/>
+          <circle cx="146" cy="58" r="6" fill="#fff" stroke="#888" stroke-width="2"/>
+          <!-- lens -->
+          <circle cx="115" cy="89" r="6" fill="#0a172a" stroke="#222" stroke-width="2"/>
+          <!-- flash beam -->
+          <path d="M115 95 L 95 130 L 135 130 Z" fill="#ffe9a8" opacity="0.4"/>
+          <!-- fins -->
+          <path d="M100 30 Q 160 20 190 12 L 206 8 L 204 24 L 190 28 Q 160 32 110 40 Z" fill="#0a172a"/>
+        </g>
+        <!-- caption -->
+        <text x="300" y="60" text-anchor="middle" fill="#6ee7ff" font-size="13" letter-spacing="2" font-weight="700">LAWNMOWER PATTERN · 20×20 m</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 10. RISK ─────────────────────── -->
+<section class="story flip" id="s-risk">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 10 · THE RIGOR</div>
+      <h2>Why the protocol is <em>sacred</em>.</h2>
+      <p>
+        The water doesn't care about your hypothesis. Every dive carries
+        risks recreational divers rarely confront at this intensity:
+      </p>
+      <ul>
+        <li><strong>Decompression sickness</strong> — nitrogen bubbling out of
+        tissues during ascent. Mitigated by computers, mandated safety stops,
+        and surface intervals.</li>
+        <li><strong>Nitrogen narcosis</strong> — the cognitive impairment that
+        starts around 30 m. A diver may forget to record the data they came
+        to record.</li>
+        <li><strong>Pulmonary barotrauma</strong> — lung overexpansion injury
+        if you hold your breath ascending.</li>
+        <li><strong>Entanglement</strong> — transect tape, kelp, fishing line,
+        derelict gear.</li>
+      </ul>
+      <p>
+        AAUS-regulated programs require a Diving Safety Officer, a
+        <em>Diving Control Board</em>, dive plans pre-filed for every operation,
+        emergency oxygen on the dive boat, paired buddy diving, and an
+        annual physical exam. Recreational programs require none of that.
+      </p>
+      <p>
+        The result is a remarkable safety record — fatality rates an order of
+        magnitude lower than recreational diving.
+      </p>
+      <div class="pills"><span>DSO oversight</span><span>Buddy system</span><span>Pre-filed plans</span></div>
+    </div>
+    <div class="story-art svg-art reveal">
+      <svg viewBox="0 0 600 450">
+        <!-- Stylized depth/safety stop diagram -->
+        <defs>
+          <linearGradient id="dg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#7ec8e3"/>
+            <stop offset="100%" stop-color="#021024"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="600" height="450" fill="url(#dg)"/>
+        <!-- depth lines -->
+        <g stroke="rgba(255,255,255,0.2)" stroke-dasharray="3 4">
+          <line x1="60" y1="80"  x2="540" y2="80"/>
+          <line x1="60" y1="150" x2="540" y2="150"/>
+          <line x1="60" y1="220" x2="540" y2="220"/>
+          <line x1="60" y1="290" x2="540" y2="290"/>
+          <line x1="60" y1="360" x2="540" y2="360"/>
+        </g>
+        <text x="20" y="84" fill="#ffe9a8" font-size="11">SURF</text>
+        <text x="20" y="154" fill="#cdeeff" font-size="11">5 m · stop</text>
+        <text x="20" y="224" fill="#cdeeff" font-size="11">10 m</text>
+        <text x="20" y="294" fill="#cdeeff" font-size="11">20 m</text>
+        <text x="20" y="364" fill="#cdeeff" font-size="11">30 m · narcosis line</text>
+        <!-- profile curve: descend, work, ascend with safety stop -->
+        <path d="M80 80 Q 120 80 160 360 L 360 360 Q 400 360 460 220 Q 480 200 500 150 L 540 150 Q 555 90 555 80"
+              stroke="#ffd166" stroke-width="3" fill="none"/>
+        <!-- dive computer pulses on path -->
+        <circle cx="80"  cy="80"  r="5" fill="#6ee7ff"/>
+        <circle cx="240" cy="360" r="5" fill="#6ee7ff"/>
+        <circle cx="360" cy="360" r="5" fill="#6ee7ff"/>
+        <circle cx="500" cy="150" r="6" fill="#ffe9a8"/>
+        <circle cx="540" cy="80"  r="7" fill="#6ee7ff"/>
+        <text x="495" y="138" fill="#ffe9a8" font-size="11" font-weight="700">3-min safety stop</text>
+        <!-- diver silhouette at bottom -->
+        <g transform="translate(252,330)">
+          <ellipse cx="48" cy="24" rx="46" ry="16" fill="#1a2f4d" stroke="#0a172a" stroke-width="2"/>
+          <circle cx="8" cy="24" r="10" fill="#0a172a"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 11. PIONEERS ─────────────────────── -->
+<section class="story" id="s-pioneers">
+  <div class="story-grid">
+    <div class="story-text reveal">
+      <div class="eye">CHAPTER 11 · WHO BUILT THIS</div>
+      <h2>The institutions <em>behind the mask</em>.</h2>
+      <p>
+        Scientific diving in its modern form was built largely in the 1950s–70s by
+        researchers at <strong>Scripps Institution of Oceanography</strong> and
+        <strong>Woods Hole Oceanographic Institution</strong>, who pushed the
+        regulatory case that science required different rules than commercial diving.
+        They won that fight in 1982 — the OSHA scientific-diving exemption.
+      </p>
+      <p>
+        Major programs to know:
+      </p>
+      <ul>
+        <li><strong>AAUS</strong> (1977) — credentialing body, ~140 member institutions.</li>
+        <li><strong>NOAA Diving Program</strong> — federal scientific diving across all
+        agency missions, from sanctuaries to fisheries surveys.</li>
+        <li><strong>Smithsonian Scientific Diving</strong> — runs the Caribbean coral
+        and Pacific reef monitoring time-series at STRI and partners.</li>
+        <li><strong>Reef Check</strong> — citizen-science protocol that scaled trained
+        recreational divers into a global reef-monitoring network.</li>
+      </ul>
+      <p>
+        The infrastructure is the unsung half of the science. Without these institutions,
+        an individual researcher's question never makes it underwater.
+      </p>
+      <div class="pills"><span>AAUS</span><span>NOAA</span><span>Smithsonian</span><span>Reef Check</span></div>
+    </div>
+    <div class="story-art reveal">
+      <img class="bg-img" src="https://upload.wikimedia.org/wikipedia/commons/4/4f/ISS-45_StoryOfWater%2C_Great_Barrier_Reef%2C_Australia.jpg" alt="The Great Barrier Reef from the International Space Station — the kind of system these programs work on"/>
+      <div class="credit">Great Barrier Reef from the ISS · NASA / Wikimedia Commons</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── 12. TOOLS ─────────────────────── -->
+<section class="tools" id="s-tools">
+  <h2>Tools of the trade</h2>
+  <div class="tool-grid">
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <rect x="14" y="10" width="36" height="44" rx="4" fill="#fff" stroke="#022" stroke-width="2"/>
+        <line x1="20" y1="22" x2="44" y2="22" stroke="#022" stroke-width="2"/>
+        <line x1="20" y1="30" x2="44" y2="30" stroke="#022" stroke-width="2"/>
+        <line x1="20" y1="38" x2="38" y2="38" stroke="#022" stroke-width="2"/>
+        <line x1="20" y1="46" x2="40" y2="46" stroke="#022" stroke-width="2"/>
+        <circle cx="50" cy="14" r="4" fill="#ff5b6e"/>
+      </svg>
+      <h4>Dive slate</h4>
+      <p>White acrylic, pencil-friendly underwater. Where every fish count, urchin tally, and "we should re-buoy this" idea actually goes.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="22" fill="#ffd166" stroke="#7a5a10" stroke-width="2"/>
+        <circle cx="32" cy="32" r="10" fill="#fff" stroke="#7a5a10" stroke-width="2"/>
+        <line x1="32" y1="22" x2="32" y2="42" stroke="#7a5a10" stroke-width="2"/>
+        <line x1="22" y1="32" x2="42" y2="32" stroke="#7a5a10" stroke-width="2"/>
+      </svg>
+      <h4>Transect tape</h4>
+      <p>30 m fiberglass, weighted reel. The single most-used scientific dive tool. Anchors the experiment to the reef.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <rect x="16" y="16" width="32" height="32" fill="none" stroke="#fff" stroke-width="3"/>
+        <line x1="32" y1="16" x2="32" y2="48" stroke="#fff" stroke-width="1.5"/>
+        <line x1="16" y1="32" x2="48" y2="32" stroke="#fff" stroke-width="1.5"/>
+      </svg>
+      <h4>Quadrat</h4>
+      <p>1×1 m PVC frame. Drop, photograph, score every point of intersection in software. The unit of comparison across sites and decades.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <ellipse cx="32" cy="22" rx="20" ry="14" fill="#ff8c3c" stroke="#7a3a10" stroke-width="2"/>
+        <rect x="28" y="34" width="8" height="20" fill="#7a3a10"/>
+        <path d="M22 36 L 24 50 M 42 36 L 40 50" stroke="#7a3a10" stroke-width="2"/>
+      </svg>
+      <h4>Lift bag</h4>
+      <p>Inflatable polyurethane balloon. Recovers heavy gear (artificial reef modules, lost moorings, dropped tanks) by displacement.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <rect x="10" y="22" width="40" height="24" rx="3" fill="#222" stroke="#000" stroke-width="2"/>
+        <circle cx="30" cy="34" r="8" fill="#0a172a" stroke="#444" stroke-width="2"/>
+        <circle cx="30" cy="34" r="3" fill="#888"/>
+        <rect x="48" y="26" width="6" height="16" rx="1" fill="#444"/>
+      </svg>
+      <h4>Camera housing</h4>
+      <p>Aluminum or polycarbonate. Holds a mirrorless or DSLR rated to 60 m. Most photogrammetry rigs add twin strobes on long arms.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="20" fill="#0a172a" stroke="#6ee7ff" stroke-width="2"/>
+        <text x="32" y="28" text-anchor="middle" font-size="9" fill="#6ee7ff" font-weight="700">12.4 m</text>
+        <text x="32" y="42" text-anchor="middle" font-size="8" fill="#ffe9a8" font-weight="700">23 min</text>
+        <line x1="32" y1="14" x2="32" y2="20" stroke="#6ee7ff" stroke-width="2"/>
+      </svg>
+      <h4>Dive computer</h4>
+      <p>Tracks depth, time, ascent rate, no-decompression limit. Required by AAUS protocol on every research dive — and on every diver.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <path d="M16 50 L 32 12 L 48 50 Z" fill="#ff5b6e" stroke="#7a1010" stroke-width="2"/>
+        <line x1="32" y1="12" x2="32" y2="58" stroke="#fff" stroke-width="3" stroke-dasharray="4 3"/>
+      </svg>
+      <h4>Surface marker buoy</h4>
+      <p>Inflatable safety sausage. Deployed on ascent so the boat — and other boats — know where divers are coming up. Mandatory in current.</p>
+    </div>
+    <div class="tool reveal">
+      <svg class="icon" viewBox="0 0 64 64">
+        <rect x="20" y="10" width="24" height="44" rx="3" fill="#888" stroke="#444" stroke-width="2"/>
+        <rect x="26" y="6" width="12" height="6" fill="#444"/>
+        <circle cx="32" cy="48" r="3" fill="#444"/>
+      </svg>
+      <h4>SCUBA cylinder</h4>
+      <p>Aluminum 80 cu ft is the workhorse — about 60 minutes of bottom time at 10 m, 25 minutes at 30 m. Filled to 207 bar (3000 psi).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────── FACTS STRIP ─────────────────────── -->
+<section class="facts">
+  <div class="facts-grid">
+    <div class="fact reveal"><div class="num">1977</div><div class="lbl">AAUS founded</div></div>
+    <div class="fact reveal"><div class="num">~100 hr</div><div class="lbl">Training to certify</div></div>
+    <div class="fact reveal"><div class="num">5–25×</div><div class="lbl">Microfrag growth boost</div></div>
+    <div class="fact reveal"><div class="num">9,000+</div><div class="lbl">Acres of seagrass restored, VA</div></div>
+  </div>
+</section>
+
+<!-- ─────────────────────── CLOSING ─────────────────────── -->
+<section class="closing">
+  <h2>Without divers, there is no marine restoration.</h2>
+  <p>
+    Every restored reef, every replanted meadow, every cleared lionfish derby in
+    the Caribbean is a story written one dive at a time, by people willing to do
+    careful work in a place humans were never built to be.
+  </p>
+  <p>
+    If you're considering this path: AAUS-affiliated universities are the
+    front door. Most programs welcome volunteer field assistants well before
+    you're ready to dive yourself.
+  </p>
+  <div class="row">
+    <a class="btn" href="dan-restoration-ecology.html">🌊 Marine restoration tour</a>
+    <a class="btn ghost" href="dan-aquatic-ecology.html">↑ Back to overview</a>
+  </div>
+</section>
+
+<footer>
+  Single-page, offline-friendly, no trackers. Photos via
+  <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>
+  · Diver illustrations are inline SVG.
+  &nbsp;·&nbsp; By <b>Dan Close</b> · HSU Master's Thesis · Cal Poly Humboldt Marine Sciences.
+</footer>
+
+</main>
+
+<!-- TOC drawer -->
+<div class="toc-veil" id="tocVeil" role="dialog" aria-modal="true">
+  <div class="toc-card" id="tocCard">
+    <h3>Chapters</h3>
+    <a href="#top"><b>Cover</b><small>Hero</small></a>
+    <a href="#s-intro"><b>1 · What scientific diving is</b><small>Definition · regulation</small></a>
+    <a href="#s-why"><b>2 · Why human divers</b><small>What ROVs can't do</small></a>
+    <a href="#s-training"><b>3 · How divers are made</b><small>AAUS training</small></a>
+    <a href="#s-transect"><b>4 · Transects &amp; quadrats</b><small>The bread and butter</small></a>
+    <a href="#s-coral"><b>5 · Coral outplanting</b><small>Microfragmentation</small></a>
+    <a href="#s-seagrass"><b>6 · Seagrass restoration</b><small>Bare-root &amp; broadcast</small></a>
+    <a href="#s-oysters"><b>7 · Oyster reefs</b><small>Living filters</small></a>
+    <a href="#s-invasives"><b>8 · Invasive species</b><small>Lionfish &amp; COTS</small></a>
+    <a href="#s-photo"><b>9 · Photogrammetry</b><small>Building reefs in software</small></a>
+    <a href="#s-risk"><b>10 · Risk &amp; rigor</b><small>Why protocol is sacred</small></a>
+    <a href="#s-pioneers"><b>11 · Pioneers</b><small>The institutions</small></a>
+    <a href="#s-tools"><b>12 · Tools of the trade</b><small>Eight pieces of kit</small></a>
+  </div>
+</div>
+
+<script>
+  // scroll progress bar
+  const bar = document.getElementById('scrollBar');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // reveal-on-scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // TOC drawer
+  const veil = document.getElementById('tocVeil');
+  document.getElementById('tocBtn').onclick = () => veil.classList.add('show');
+  veil.addEventListener('click', e => { if (e.target === veil) veil.classList.remove('show'); });
+  document.querySelectorAll('#tocCard a').forEach(a =>
+    a.addEventListener('click', () => veil.classList.remove('show')));
+
+  // Esc closes
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') veil.classList.remove('show');
+  });
+</script>
+<!-- ─────────────────── NARRATION (Web Speech API) ─────────────────── -->
+<style>
+  .narr-fab {
+    position: fixed; right: 16px; bottom: 16px;
+    z-index: 55;
+    width: 52px; height: 52px;
+    border: 0; border-radius: 50%;
+    background: linear-gradient(135deg, #6ee7ff 0%, #2a8fc9 100%);
+    color: #022; font-size: 22px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.15) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .narr-fab:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 12px 30px rgba(110,231,255,0.5); }
+  .narr-fab.narrating {
+    background: linear-gradient(135deg, #ffd166 0%, #ff8c3c 100%);
+    animation: narrPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes narrPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,209,102,0.4), 0 8px 24px rgba(0,0,0,0.5); }
+    50%     { box-shadow: 0 0 0 14px rgba(255,209,102,0), 0 8px 24px rgba(0,0,0,0.5); }
+  }
+  .narr-panel {
+    position: fixed; right: 16px; bottom: 80px;
+    z-index: 56; width: 320px;
+    background: linear-gradient(180deg, #062a52 0%, #021024 100%);
+    border: 1px solid rgba(110,231,255,0.4);
+    border-radius: 14px;
+    padding: 16px; color: #f4fbff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    display: none;
+  }
+  .narr-panel.show { display: block; animation: narrIn 0.2s ease; }
+  @keyframes narrIn { from { transform: translateY(8px); opacity: 0; } to { opacity: 1; } }
+  .narr-panel header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    color: #6ee7ff; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+  }
+  .narr-panel header button { background: none; border: 0; color: #b9d6ea; font-size: 16px; cursor: pointer; }
+  .narr-panel label { display: block; color: #b9d6ea; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin: 8px 0 4px; }
+  .narr-panel select, .narr-panel input[type=range] {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #f4fbff; padding: 6px 8px; border-radius: 6px; font-size: 12px;
+  }
+  .narr-panel .row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; margin-top: 12px; }
+  .narr-panel .row button {
+    padding: 8px 10px;
+    border: 1px solid rgba(110,231,255,0.4);
+    background: rgba(110,231,255,0.10);
+    color: #f4fbff; border-radius: 8px; cursor: pointer;
+    font-weight: 700; font-size: 12px;
+  }
+  .narr-panel .row button.primary {
+    background: linear-gradient(135deg, #6ee7ff, #2a8fc9);
+    color: #022; border-color: transparent;
+  }
+  .narr-panel .row button:hover { filter: brightness(1.1); }
+  .narr-panel .row button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .narr-panel .hint { margin-top: 10px; color: #9bd6ff; font-size: 10px; line-height: 1.4; }
+  .narr-panel .voice-warn { margin-top: 8px; color: #ffd166; font-size: 10px; line-height: 1.4; display: none; }
+  .narr-panel .voice-warn.show { display: block; }
+  .narr-panel .narr-status {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.10);
+    font-size: 11px; color: #9bd6ff;
+    text-align: center; min-height: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .narr-panel .narr-status.err { color: #ffd166; }
+  .narr-panel .narr-status.ok  { color: #7dffb1; }
+</style>
+
+<button class="narr-fab" id="narrFab" title="Listen to this page" aria-label="Narrate page">🎧</button>
+<div class="narr-panel" id="narrPanel" role="dialog" aria-label="Narration controls">
+  <header><span>🔊 Narration</span><button id="narrClose" aria-label="Close">×</button></header>
+  <label for="narrVoice">Voice</label>
+  <select id="narrVoice"><option>Loading voices…</option></select>
+  <div class="voice-warn" id="narrWarn">
+    For Microsoft natural voices, open this page in <b>Microsoft Edge</b>.
+    On macOS without Edge, the best free voices are <b>Samantha</b>, <b>Ava</b>, or <b>Allison</b>.
+  </div>
+  <label for="narrRate">Speed (<span id="narrRateLbl">1.00×</span>)</label>
+  <input type="range" id="narrRate" min="0.7" max="1.5" step="0.05" value="1.0"/>
+  <div class="row">
+    <button class="primary" id="narrPlay">▶ Read page</button>
+    <button id="narrPause">⏸</button>
+    <button id="narrStop">⏹</button>
+  </div>
+  <div class="hint">Tip — highlight any text first, then press Read to hear just that.</div>
+  <div class="narr-status" id="narrStatus"></div>
+</div>
+
+<script>
+(() => {
+  if (!('speechSynthesis' in window)) { console.warn('[narr] speechSynthesis not supported'); return; }
+  const synth = window.speechSynthesis;
+
+  let voices = [];
+  let chunks = [];
+  let chunkIdx = 0;
+  let active = false;
+  let keepalive = null;
+
+  const $  = id => document.getElementById(id);
+  const voiceSel = $('narrVoice');
+  const rateInp  = $('narrRate');
+  const rateLbl  = $('narrRateLbl');
+  const fab      = $('narrFab');
+  const panel    = $('narrPanel');
+  const warn     = $('narrWarn');
+  const status   = $('narrStatus');
+
+  function setStatus(msg, kind) {
+    if (!status) return;
+    status.textContent = msg || '';
+    status.classList.remove('err', 'ok');
+    if (kind === 'err') status.classList.add('err');
+    if (kind === 'ok')  status.classList.add('ok');
+  }
+
+  function score(v) {
+    let s = 0;
+    if (/^en/i.test(v.lang)) s += 200;
+    if (/^en[-_]US/i.test(v.lang)) s += 30;
+    if (/(Natural|Neural|Online)/i.test(v.name)) s += 200;
+    if (/Microsoft/i.test(v.name)) s += 60;
+    if (/Aria|Jenny|Sonia|Emma|Michelle/i.test(v.name)) s += 80;
+    if (/Ava \(Premium\)|Samantha \(Premium\)|Allison \(Premium\)|Susan \(Premium\)/i.test(v.name)) s += 70;
+    if (/Ava|Samantha|Allison|Susan|Karen|Tessa|Moira|Fiona/i.test(v.name)) s += 35;
+    if (/Google.*US English/i.test(v.name)) s += 25;
+    if (/Daniel|Fred|Alex|Ralph|Bruce|Tom|Mark|Guy/i.test(v.name)) s -= 30;
+    if (v.default) s += 3;
+    return s;
+  }
+
+  function loadVoices() {
+    const all = synth.getVoices();
+    if (!all || all.length === 0) return false;
+    voices = all.slice().sort((a,b) => score(b) - score(a));
+    voiceSel.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      const tag = /(Natural|Neural|Online)/i.test(v.name) ? ' ✨'
+                : /Premium/i.test(v.name) ? ' ★' : '';
+      opt.textContent = `${v.name}${tag} · ${v.lang}`;
+      voiceSel.appendChild(opt);
+    });
+    warn.classList.toggle('show', !voices.some(v => /(Natural|Neural)/i.test(v.name)));
+    return true;
+  }
+
+  // initial attempt + voiceschanged + 1s polling fallback
+  loadVoices();
+  if (synth.onvoiceschanged !== undefined) synth.addEventListener('voiceschanged', loadVoices);
+  let polls = 0;
+  const pollVoices = setInterval(() => {
+    if (loadVoices() || ++polls > 20) clearInterval(pollVoices);
+  }, 100);
+
+  rateInp.addEventListener('input', () => {
+    rateLbl.textContent = parseFloat(rateInp.value).toFixed(2) + '×';
+  });
+
+  function gatherText() {
+    const SEL = 'h1, h2, h3, h4, .lede, .subtitle, .body p, .body li, p, li, blockquote';
+    const SKIP = [
+      '.topnav', '.ctrl', '.ctrls', '.narr-panel', '.narr-fab',
+      '.toc-veil', '.toc-card', '.modal-veil', '.modal',
+      '.quiz', 'footer', '.credit', '.attrib', '.stat-chip',
+      '.pills', '.pill', '.tick', '.fact', '.tool',
+      '.hero-tag', '.scroll-cue', '.hero-scroll-hint',
+      '.deck-title', '.counter', '.hint', '.meta-row', '.open', '.tag',
+      '.slide:not(.active)'   // restoration deck: only read the visible slide
+    ].join(',');
+    return Array.from(document.querySelectorAll(SEL))
+      .filter(el => !el.closest(SKIP))
+      .filter(el => {
+        const cs = getComputedStyle(el);
+        return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0.05;
+      })
+      .map(el => el.textContent.replace(/\s+/g, ' ').trim())
+      .filter(t => t && t.length > 1);
+  }
+
+  function startKeepalive() {
+    stopKeepalive();
+    // Chrome cuts speech off after ~15s; pause+resume restarts the clock
+    keepalive = setInterval(() => {
+      if (active && !synth.paused && synth.speaking) {
+        synth.pause(); synth.resume();
+      }
+    }, 10000);
+  }
+  function stopKeepalive() { if (keepalive) clearInterval(keepalive); keepalive = null; }
+
+  function speakNext() {
+    if (!active) return;
+    if (chunkIdx >= chunks.length) {
+      active = false; updateUI();
+      stopKeepalive();
+      setStatus('✓ Done.', 'ok');
+      return;
+    }
+    setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    const u = new SpeechSynthesisUtterance(chunks[chunkIdx]);
+    const v = voices[+voiceSel.value];
+    if (v) u.voice = v;
+    u.rate  = parseFloat(rateInp.value) || 1.0;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    u.onend = () => { chunkIdx++; speakNext(); };
+    u.onerror = (e) => {
+      console.warn('[narr] utterance error', e);
+      chunkIdx++; speakNext();
+    };
+    try {
+      synth.speak(u);
+    } catch (err) {
+      console.error('[narr] speak threw', err);
+      setStatus('Speak failed: ' + err.message, 'err');
+      active = false; updateUI(); stopKeepalive();
+    }
+  }
+
+  function play() {
+    // pick text first
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().trim().length > 4) {
+      chunks = sel.toString().split(/(?<=[.!?])\s+/).filter(Boolean);
+    } else {
+      chunks = gatherText();
+    }
+    if (!chunks.length) { setStatus('No readable text found.', 'err'); return; }
+
+    // make sure voices have a chance to load
+    if (voices.length === 0) loadVoices();
+
+    if (synth.speaking || synth.pending) synth.cancel();
+
+    chunkIdx = 0;
+    active = true;
+    updateUI();
+    startKeepalive();
+    setStatus(`Loading ${chunks.length} segments…`);
+
+    // Chrome: small delay after cancel prevents the new speak() from getting eaten
+    setTimeout(() => {
+      if (!active) return;
+      // If voices STILL aren't loaded, speak with default voice (synth uses system default)
+      speakNext();
+    }, 80);
+  }
+
+  function togglePause() {
+    if (!active) return;
+    if (synth.speaking && !synth.paused) {
+      synth.pause(); setStatus('Paused.');
+    } else if (synth.paused) {
+      synth.resume(); setStatus(`Reading ${chunkIdx + 1} / ${chunks.length}…`);
+    }
+  }
+
+  function stop() {
+    synth.cancel();
+    active = false;
+    stopKeepalive();
+    updateUI();
+    setStatus('Stopped.');
+  }
+
+  function updateUI() {
+    fab.classList.toggle('narrating', active);
+    fab.textContent = active ? '🔊' : '🎧';
+  }
+
+  fab.addEventListener('click', () => panel.classList.toggle('show'));
+  $('narrClose').onclick = () => panel.classList.remove('show');
+  $('narrPlay').onclick  = play;
+  $('narrPause').onclick = togglePause;
+  $('narrStop').onclick  = stop;
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('show')) panel.classList.remove('show');
+  });
+  window.addEventListener('beforeunload', () => synth.cancel());
+})();
+</script>
+</body>
+</html>
