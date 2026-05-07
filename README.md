@@ -3,9 +3,19 @@
 > An **HSU Master's Thesis Project** at **Cal Poly Humboldt · Marine Sciences**.
 > Four single-page features on aquatic ecology, restoration ecology, and scientific diving — built with [Claude Code](https://claude.com/claude-code) (Anthropic's AI coding CLI).
 
-🎥 **[Watch the 1-min video walkthrough](https://youtu.be/clXORLW3_1I)**
+<div align="center">
 
-🌐 **[Live site](https://nicedreamzapp.github.io/dan-aquatic-ecology/)**
+<a href="https://youtu.be/clXORLW3_1I">
+  <img src="https://img.youtube.com/vi/clXORLW3_1I/maxresdefault.jpg" alt="▶ 1-minute video walkthrough" width="720"/>
+</a>
+
+**[▶ Watch the 1-minute video walkthrough on YouTube](https://youtu.be/clXORLW3_1I)** &nbsp;·&nbsp; **[🌐 Live site](https://nicedreamzapp.github.io/dan-aquatic-ecology/)**
+
+</div>
+
+> _Prefer to play it inline?_ The 1080p MP4 is committed in this repo as
+> [`dans-aquatic-ecology-1080p.mp4`](dans-aquatic-ecology-1080p.mp4) — clone the repo and double-click,
+> or watch directly on the [live site](https://nicedreamzapp.github.io/dan-aquatic-ecology/).
 
 ---
 
