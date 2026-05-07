@@ -181,6 +181,33 @@
   .wiggle { animation: wig 2s ease-in-out infinite; transform-origin: bottom center; }
   @keyframes wig { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
+  /* ─── video feature ─── */
+  .video-feature {
+    margin: 36px auto 0;
+    max-width: 1100px;
+  }
+  .video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(110,231,255,0.3);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(110,231,255,0.15) inset;
+    background: #021024;
+  }
+  .video-frame iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0;
+  }
+  .video-caption {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin: 14px 0 0;
+    letter-spacing: 0.5px;
+  }
+
   /* ─── about / footer ─── */
   .about {
     margin-top: 72px;
@@ -213,6 +240,64 @@
 </head>
 <body>
 
+<style id="dan-nav-style">
+  /* unified site nav — same on every page */
+  body { padding-top: 0 !important; }   /* nav uses position:fixed, no body push */
+  .dan-nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(2,16,36,0.92), rgba(2,16,36,0.55));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(110,231,255,0.22);
+    padding: 8px 16px;
+    display: flex; flex-wrap: wrap;
+    align-items: center; gap: 4px 6px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase;
+  }
+  .dan-nav a {
+    color: #b9d6ea;
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  .dan-nav a:hover { color: #6ee7ff; background: rgba(110,231,255,0.12); }
+  .dan-nav a.dan-brand {
+    color: #6ee7ff;
+    font-weight: 800;
+    margin-right: auto;
+    letter-spacing: 1.6px;
+  }
+  .dan-nav a.dan-current {
+    color: #ffe9a8;
+    background: rgba(255,233,168,0.10);
+  }
+  .dan-nav .dan-sep { color: rgba(255,255,255,0.18); padding: 0 2px; }
+  /* Slide-deck pages already have a .hud or .home-link at top — bump them below the nav */
+  .hud { top: 38px !important; }
+  .home-link { display: none !important; }
+  /* scientific diving page already has .topnav — we hide its old one */
+  .topnav { display: none !important; }
+  @media (max-width: 700px) {
+    .dan-nav { padding: 6px 10px; font-size: 10px; letter-spacing: 1px; }
+    .dan-nav a { padding: 4px 6px; }
+  }
+</style>
+
+<nav class="dan-nav" role="navigation" aria-label="Site">
+  <a href="https://nicedreamzwholesale.com/software/" class="dan-brand">← Nice Dreamz Software</a>
+  <a href="index.html" class="dan-current">Project Home</a>
+  <span class="dan-sep">·</span>
+  <a href="dan-aquatic-ecology.html">🌊 Ecology</a>
+  <a href="dan-restoration-ecology.html">🌊 Marine</a>
+  <a href="dan-freshwater-restoration.html">🏞 Freshwater</a>
+  <a href="dan-scientific-diving.html">🤿 Diving</a>
+</nav>
+
+
 <div class="ambient">
   <div class="bubble" style="left:6%;  width:6px;  height:6px;  animation-duration:14s;"></div>
   <div class="bubble" style="left:14%; width:10px; height:10px; animation-duration:18s; animation-delay:3s;"></div>
@@ -237,6 +322,19 @@
       <span><span class="dot"></span>SVG-only · works offline</span>
       <span><span class="dot"></span>Narration built in</span>
     </div>
+  </section>
+
+  <section class="video-feature">
+    <div class="video-frame">
+      <iframe
+        width="100%" height="100%"
+        src="https://www.youtube.com/embed/clXORLW3_1I?rel=0&modestbranding=1"
+        title="Dan Close · Aquatic Ecology — 1-minute walkthrough"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+    <p class="video-caption">▶ A 1-minute video walkthrough · narrated by a Microsoft neural voice · assembled by Claude Code</p>
   </section>
 
   <section class="cards">
@@ -733,5 +831,108 @@
   window.addEventListener('beforeunload', () => synth.cancel());
 })();
 </script>
+
+<style id="dan-mobile-fixes">
+  /* ─── universal mobile / responsive guards ─── */
+
+  /* 1. The narration 🎧 FAB and its panel — keep them clear of every other floating UI */
+  @media (max-width: 700px) {
+    .narr-fab { width: 44px !important; height: 44px !important; bottom: 12px !important; right: 12px !important; font-size: 18px !important; }
+    .narr-panel { width: calc(100vw - 24px) !important; right: 12px !important; left: 12px !important; bottom: 64px !important; }
+  }
+
+  /* 2. The unified site nav — already responsive, but trim padding on tiny widths */
+  @media (max-width: 480px) {
+    .dan-nav { padding: 6px 8px !important; gap: 2px 4px !important; }
+    .dan-nav a { padding: 4px 7px !important; font-size: 9px !important; letter-spacing: 0.8px !important; }
+    .dan-nav a.dan-brand { font-size: 10px !important; margin-right: 4px !important; }
+  }
+
+  /* 3. Slide-deck pages: clear the bottom ctrls bar from the figures + clear top hud from attrib */
+  @media (max-width: 700px) {
+    .deck .content { padding: 4vh 5vw 130px !important; max-width: 96vw !important; }
+    .deck .attrib  { top: 88px !important; max-width: 60vw !important; font-size: 9px !important; }
+    .deck .ctrls   { bottom: 12px !important; gap: 6px !important; }
+    .deck .ctrls .btn { padding: 8px 11px !important; font-size: 11px !important; }
+    .deck .title    { font-size: clamp(22px, 7vw, 36px) !important; }
+    .deck .subtitle { font-size: clamp(13px, 4vw, 16px) !important; }
+    .deck .body     { font-size: clamp(11px, 3.4vw, 13px) !important; }
+    .deck .figures  { gap: 8px !important; }
+    .deck .stat     { padding: 6px 10px !important; min-width: 0 !important; flex: 1 1 auto !important; }
+    .deck .stat .num { font-size: 16px !important; }
+  }
+
+  /* 4. Aquatic ecology hero — collapse to a single column on mobile and shrink the ticks */
+  @media (max-width: 760px) {
+    .hero-stage { grid-template-columns: 1fr !important; gap: 14px !important; padding: 14px !important; }
+    .hero { height: auto !important; min-height: 100vh !important; padding: 40px 4vw 20px !important; }
+    .hero-head h1 { font-size: clamp(20px, 6vw, 30px) !important; }
+    .focus-art { max-width: 200px !important; }
+    .focus-info h2 { font-size: clamp(18px, 5vw, 26px) !important; }
+    .scale-track { height: 70px !important; }
+    .tick .lbl { font-size: 8px !important; }
+    .tick .lbl b { font-size: 9px !important; }
+    .tick .dot { width: 10px !important; height: 10px !important; margin-top: 22px !important; }
+    .traveler { width: 16px !important; height: 16px !important; margin-left: -8px !important; top: 26px !important; }
+    .hero-ctrls { gap: 6px !important; }
+    .hero-ctrls button { font-size: 11px !important; padding: 6px 10px !important; }
+    .hero-scroll-hint { font-size: 10px !important; }
+  }
+
+  /* 5. Aquatic ecology — depth zones, modal, quiz */
+  @media (max-width: 700px) {
+    .zones { grid-template-columns: 110px 1fr !important; }
+    .zone .label h2 { font-size: 11px !important; }
+    .zone .label .depth { font-size: 9px !important; }
+    .zone .label p { font-size: 10px !important; }
+    .ctrl { left: 12px !important; right: 12px !important; transform: none !important; bottom: 70px !important; padding: 6px 8px !important; flex-wrap: wrap !important; justify-content: center !important; }
+    .ctrl button { font-size: 11px !important; padding: 6px 10px !important; }
+    .modal { padding: 18px 18px 14px !important; max-height: 80vh !important; }
+    .modal h2 { font-size: 20px !important; }
+    .modal .pill { font-size: 9px !important; padding: 2px 7px !important; }
+    .quiz .opts { grid-template-columns: 1fr !important; }
+  }
+
+  /* 6. Scientific diving narrative — story grid stacks, tools shrink */
+  @media (max-width: 700px) {
+    .story-grid { grid-template-columns: 1fr !important; gap: 18px !important; direction: ltr !important; }
+    section.story { padding: 50px 5vw !important; }
+    .story.flip .story-grid { direction: ltr !important; }
+    .hero-content { padding: 0 6vw 60px !important; }
+    .hero-content h1 { font-size: clamp(24px, 8vw, 42px) !important; }
+    .hero-content .lede { font-size: clamp(13px, 3.6vw, 16px) !important; }
+    .tools { padding: 50px 5vw !important; }
+    .tool-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+    .tool { padding: 12px 10px !important; }
+    .tool h4 { font-size: 13px !important; }
+    .tool p { font-size: 11px !important; }
+    .closing { padding: 60px 5vw !important; }
+    .topnav { padding: 8px 12px !important; }
+  }
+  @media (max-width: 380px) {
+    .tool-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* 7. Hub cards — already auto-fit, just shrink padding on phones */
+  @media (max-width: 700px) {
+    main { padding: 50px 5vw 60px !important; }
+    .hero { padding: 40px 0 30px !important; }
+    h1 { font-size: clamp(24px, 7vw, 40px) !important; }
+    .lede { font-size: clamp(13px, 3.6vw, 16px) !important; }
+    .meta-row { gap: 10px !important; font-size: 10px !important; }
+    .video-feature { margin-top: 24px !important; }
+    .cards { margin-top: 32px !important; gap: 14px !important; }
+    .card .body { padding: 14px 16px 18px !important; }
+    .card h3 { font-size: 16px !important; }
+    .about { padding: 20px 18px !important; }
+    .about p { font-size: 13px !important; }
+  }
+
+  /* 8. Make sure no element ever overflows the viewport horizontally */
+  html, body { overflow-x: hidden; }
+
+  /* 9. Push fixed top elements below the dan-nav (40px tall) on every page */
+  body > main, body > .stage, body > .hero, body > section.hero { padding-top: 0; }
+</style>
 </body>
 </html>
