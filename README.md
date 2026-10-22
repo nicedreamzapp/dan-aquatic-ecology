@@ -35,9 +35,9 @@
 
 </div>
 
----
-
-## 📚 What's in it
+<a id="whats-in-it"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-banner.svg" width="100%" alt="01. What&#x27;s in it. Four single-file HTML features"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-r1.svg" width="100%" alt="No build step. No npm, no tracking, no API keys. Email or AirDrop any file. Every feature is a single HTML file and it just works. Four features. Aquatic Ecology, Marine Restoration, Freshwater Restoration and Scientific Diving."></picture>
 
 Four single-file HTML features. **No build step. No npm. No tracking. No API keys.** Email or AirDrop any file and it just works.
 
@@ -76,9 +76,11 @@ Four single-file HTML features. **No build step. No npm. No tracking. No API key
 </tr>
 </table>
 
----
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s01-rule.svg" width="100%" alt="">
 
-## 🔬 The science
+<a id="science"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-banner.svg" width="100%" alt="02. The science. Why each layer matters"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-r1.svg" width="100%" alt="Phytoplankton. Drifting algae produce roughly half of Earth&#x27;s oxygen. Copepods. Likely the most abundant animal on Earth. Microfragmentation. Cutting corals into 1cm chunks triggers a 5 to 25x growth boost."></picture>
 
 <table>
 <tr><th>Layer</th><th>Why it matters</th></tr>
@@ -92,9 +94,11 @@ Four single-file HTML features. **No build step. No npm. No tracking. No API key
 <tr><td><b>Scientific diving</b></td><td>Without AAUS-credentialed divers, modern aquatic restoration ecology would not exist.</td></tr>
 </table>
 
----
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s02-rule.svg" width="100%" alt="">
 
-## 🤖 How it was built — with Claude Code
+<a id="built"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner.svg" width="100%" alt="03. How it was built with Claude Code. One sitting, no build step"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1.svg" width="100%" alt="Claude Code on Opus 4.7. Anthropic&#x27;s AI pair-programming CLI. About 6,000 lines. HTML, CSS and JavaScript across five self-contained pages. Self-narrating. Each page has a headphones button backed by a local edge-tts service."></picture>
 
 <table>
 <tr>
@@ -114,9 +118,11 @@ Built end-to-end in **[Claude Code](https://claude.com/claude-code)** — Anthro
 </tr>
 </table>
 
----
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-rule.svg" width="100%" alt="">
 
-## ⚡ Try it locally
+<a id="local"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-banner.svg" width="100%" alt="04. Try it locally. Open index.html and you are done"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-r1.svg" width="100%" alt="Clone and open. Every page also works as a standalone HTML file. No install. Double-click any page. Optional narration server. Flask and edge-tts for Microsoft neural voices."></picture>
 
 ```bash
 git clone https://github.com/nicedreamzapp/dan-aquatic-ecology
@@ -138,23 +144,21 @@ python server.py     # listens on 127.0.0.1:9200
 
 Then any feature page's 🎧 button plays in Ava's full neural voice. Falls back to the browser's native Web Speech API when the service isn't running.
 
----
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s04-rule.svg" width="100%" alt="">
 
-## 📊 By the numbers
+<a id="numbers"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-banner.svg" width="100%" alt="05. By the numbers. Molecule to whale"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-r1.svg" width="100%" alt="11 orders of magnitude, molecule to whale. 30 chapters of science across 4 features. ~6k lines of HTML / SVG / JS."></picture>
 
-<table>
-<tr>
-<td align="center"><h3>11</h3>orders of magnitude<br/><sub>molecule → whale</sub></td>
-<td align="center"><h3>30</h3>chapters of science<br/><sub>across 4 features</sub></td>
-<td align="center"><h3>~6k</h3>lines of code<br/><sub>HTML / SVG / JS</sub></td>
-<td align="center"><h3>0</h3>npm dependencies<br/><sub>zero build step</sub></td>
-<td align="center"><h3>5</h3>HTML files<br/><sub>each works offline</sub></td>
-</tr>
-</table>
+**0** npm dependencies, zero build step · **5** HTML files, each works offline
 
----
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s05-rule.svg" width="100%" alt="">
 
-## 🗺️ Project map
+<a id="map"></a>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-banner.svg" width="100%" alt="06. Project map and credits. Where everything lives"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-r1.svg" width="100%" alt="MIT licensed. Use, remix, share. Credit Dan Close where you can. Live on GitHub Pages. Source on GitHub, featured on Nice Dreamz Software. Free voices. Microsoft neural voices via edge-tts, no API key."></picture>
+
+### Project map
 
 ```
 dan-aquatic-ecology/
@@ -173,9 +177,7 @@ dan-aquatic-ecology/
 └── LICENSE                             ← MIT
 ```
 
----
-
-## 💛 Credits
+### Credits
 
 **Author** · Dan Close — HSU Master's Thesis Project, Cal Poly Humboldt Marine Sciences
 
@@ -186,6 +188,8 @@ dan-aquatic-ecology/
 **Voices** · Microsoft neural voices via [`edge-tts`](https://github.com/rany2/edge-tts) — free, no API key
 
 **Hosting** · Source on GitHub · Live site on [GitHub Pages](https://nicedreamzapp.github.io/dan-aquatic-ecology/) · Featured on [Nice Dreamz Software](https://nicedreamzwholesale.com/software/dan-aquatic-ecology/)
+
+<img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s06-rule.svg" width="100%" alt="">
 
 ---
 
