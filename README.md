@@ -10,7 +10,6 @@
 
 [![HSU Master's Thesis](https://img.shields.io/badge/HSU-Master's%20Thesis-1f5f3a?style=for-the-badge&logo=academia&logoColor=white)](https://www.humboldt.edu)
 [![Cal Poly Humboldt](https://img.shields.io/badge/Cal%20Poly-Humboldt-006847?style=for-the-badge)](https://www.humboldt.edu)
-[![Built with Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-D97757?style=for-the-badge&logo=anthropic&logoColor=white)](https://claude.com/claude-code)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2a8fc9?style=for-the-badge)](LICENSE)
 
 [![Stars](https://img.shields.io/github/stars/nicedreamzapp/dan-aquatic-ecology?style=flat-square&color=f5c542&label=⭐%20Stars)](https://github.com/nicedreamzapp/dan-aquatic-ecology/stargazers)
@@ -31,7 +30,7 @@
   <img src="https://img.youtube.com/vi/clXORLW3_1I/maxresdefault.jpg" alt="▶ 1-minute video walkthrough" width="80%"/>
 </a>
 
-*Narrated by Microsoft's Ava neural voice · assembled by Claude Code · [Watch on YouTube](https://youtu.be/clXORLW3_1I)*
+*Narrated by Microsoft's Ava neural voice · [Watch on YouTube](https://youtu.be/clXORLW3_1I)*
 
 </div>
 
@@ -97,19 +96,19 @@ Four single-file HTML features. **No build step. No npm. No tracking. No API key
 <img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s02-rule.svg" width="100%" alt="">
 
 <a id="built"></a>
-<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-banner.svg" width="100%" alt="03. How it was built with Claude Code. One sitting, no build step"></picture>
-<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/06bf1288ab9774a9959fd419d013180293e9f75c/assets/readme/s03-r1.svg" width="100%" alt="Claude Code on Opus 4.7. Anthropic&#x27;s AI pair-programming CLI. About 6,000 lines. HTML, CSS and JavaScript across five self-contained pages. Self-narrating. Each page has a headphones button backed by a local edge-tts service."></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-banner.svg" width="100%" alt="03. How it was built in one sitting. No build step"></picture>
+<picture><source media="(max-width: 610px), (min-width: 768px) and (max-width: 895px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1-m.svg"><source media="(max-width: 1149px)" srcset="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1-mid.svg"><img src="https://raw.githubusercontent.com/nicedreamzapp/dan-aquatic-ecology/main/assets/readme/s03-r1.svg" width="100%" alt="No build step. Pure HTML, inline SVG and JavaScript, one file per page. About 6,000 lines. HTML, CSS and JavaScript across five self-contained pages. Self-narrating. Each page has a headphones button backed by a local edge-tts service."></picture>
 
 <table>
 <tr>
 <td width="60%">
 
-Built end-to-end in **[Claude Code](https://claude.com/claude-code)** — Anthropic's AI pair-programming CLI on **Opus 4.7**. ~6,000 lines of HTML / CSS / JavaScript across five self-contained pages, all in one sitting.
+Built end-to-end in one sitting: ~6,000 lines of HTML / CSS / JavaScript across five self-contained pages.
 
 - **No build step.** Pure HTML, inline SVG, inline JavaScript — every page is a single file.
 - **Hand-coded animations.** Every organism, every diver, every tool — molecules, microbes, copepods, photogrammetry rigs — drawn in code.
 - **Self-narrating.** Each page has a 🎧 button. A tiny local Flask service wraps `edge-tts` to call Microsoft's free Edge neural-voice backend (Ava) and serves cached MP3s on demand.
-- **The 1-minute YouTube video** was assembled by Claude too — Playwright headless Chromium recording at 1920×1080, ffmpeg concat / fade / audio mixing, all scripted.
+- **The 1-minute YouTube video** is scripted too: Playwright headless Chromium recording at 1920×1080, ffmpeg concat / fade / audio mixing.
 
 </td>
 <td width="40%" align="center">
@@ -172,7 +171,6 @@ dan-aquatic-ecology/
 ├── _video-outro.html                   ← outro card (used to record the YouTube video)
 ├── dans-aquatic-ecology-1080p.mp4      ← the 1-minute walkthrough, 1080p H.264
 ├── screenshots/                        ← still frames used in this README
-├── CLAUDE.md                           ← context for future Claude Code sessions
 ├── README.md                           ← you are here
 └── LICENSE                             ← MIT
 ```
@@ -180,8 +178,6 @@ dan-aquatic-ecology/
 ### Credits
 
 **Author** · Dan Close — HSU Master's Thesis Project, Cal Poly Humboldt Marine Sciences
-
-**Built with** · [Claude Code](https://claude.com/claude-code) (Anthropic, Opus 4.7) — pair-programmed in one sitting
 
 **Photos** · [Wikimedia Commons](https://commons.wikimedia.org/) (public domain / CC). Diver illustrations are inline SVG.
 
